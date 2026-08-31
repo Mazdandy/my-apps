@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(git -C \"/Users/dfdandys/Documents/Project/CV Reviewer\" rev-parse --is-inside-work-tree 2>&1; echo \"---\"; git -C \"/Users/dfdandys/Documents/Project/CV Reviewer\" status --short 2>&1 | head -20)",
+      "Shell(chmod:*)",
+      "Shell(bash -n deploy/setup-vps.sh)",
+      "Shell(bash -n deploy/install-services.sh)",
+      "Shell(env -u NODE_ENV npm run build 2 >& 1)",
+      "Shell(ls .next/standalone/server.js .next/standalone/.next/static 2>&1; echo \"---\"; ls .next/standalone/node_modules/next/package.json 2>&1 | head -2)",
+      "Shell(ls .next/ | head; echo \"---\"; grep -r \"standalone\" .next/BUILD_ID 2>/dev/null; ls .next/standalone 2>&1)",
+      "Shell(find .next/standalone -maxdepth 4 -name \"server.js\" 2>/dev/null; echo \"===\"; ls .next/standalone/Documents/Project/ 2>/dev/null; echo \"===\"; cat .next/standalone/package.json 2>/dev/null | head -20)",
+      "Shell(ls -la \"/Users/dfdandys/Documents/Project/CV Reviewer/.commandcode\" 2>/dev/null; echo \"===\"; cat \"/Users/dfdandys/Documents/Project/CV Reviewer/.commandcode\"/*.json 2>/dev/null | head -30)",
+      "Shell(ls -ld \"/Users/dfdandys/Documents/Project/CV Reviewer/.commandcode\" \"/Users/dfdandys/Documents/Project/CV Reviewer/.commandcode/taste\"; echo \"===\"; ls -la \"/Users/dfdandys/Documents/Project/CV Reviewer/.commandcode/taste\" 2>/dev/null; echo \"===\"; ls -ld \"/Users/dfdandys/Documents/Project/CV Reviewer/.next\")"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

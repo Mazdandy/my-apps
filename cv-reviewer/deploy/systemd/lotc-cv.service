@@ -1,0 +1,17 @@
+[Unit]
+Description=LOTC CV Reviewer (Next.js, port 3002)
+After=network.target
+
+[Service]
+Type=simple
+User=__USER__
+WorkingDirectory=__APP_DIR__
+Environment=NODE_ENV=production
+Environment=PORT=3002
+Environment=HOSTNAME=0.0.0.0
+ExecStart=/usr/bin/node __APP_DIR__/.next/standalone/server.js
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
