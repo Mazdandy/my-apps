@@ -13,6 +13,9 @@ pnpm-debug.log*
 .idea/
 *.swp
 
+# Local agent/tooling config (bukan bagian dari repo)
+.commandcode/
+
 # Env — setiap app punya .gitignore sendiri, ini cadangan
 .env
 .env.local

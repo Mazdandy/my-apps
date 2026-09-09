@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>QA-Helper (v0.1 MVP)</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-tertiary":"#472a00","error-container":"#93000a","surface-tint":"#c3c0ff","secondary":"#4edea3","tertiary":"#ffb95f","primary-fixed":"#e2dfff","error":"#ffb4ab","on-primary-fixed-variant":"#3323cc","primary-container":"#4f46e5","inverse-on-surface":"#283044","on-tertiary-fixed":"#2a1700","on-secondary-container":"#00311f","on-error":"#690005","on-tertiary-fixed-variant":"#653e00","on-secondary-fixed":"#002113","on-error-container":"#ffdad6","on-tertiary-container":"#ffd4a4","on-surface-variant":"#c7c4d8","on-primary-fixed":"#0f0069","inverse-surface":"#dae2fd","on-primary":"#1d00a5","surface-container-highest":"#2d3449","on-secondary":"#003824","surface-container-high":"#222a3d","surface-bright":"#31394d","background":"#0b1326","tertiary-fixed":"#ffddb8","surface-container-lowest":"#060e20","surface-dim":"#0b1326","surface-variant":"#2d3449","surface-container-low":"#131b2e","tertiary-container":"#885500","inverse-primary":"#4d44e3","on-surface":"#dae2fd","on-primary-container":"#dad7ff","outline":"#918fa1","surface":"#0b1326","secondary-fixed":"#6ffbbe","tertiary-fixed-dim":"#ffb95f","primary-fixed-dim":"#c3c0ff","outline-variant":"#464555","secondary-container":"#00a572","primary":"#c3c0ff","surface-container":"#171f33","on-secondary-fixed-variant":"#005236","on-background":"#dae2fd","secondary-fixed-dim":"#4edea3"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"sidebar-w":"16rem","unit-sm":"0.5rem","unit-base":"1rem","unit-lg":"1.5rem","inspector-w":"22rem","unit-md":"0.75rem","unit-xl":"2rem","unit-2xs":"0.125rem","gutter-table":"0.75rem","unit-xs":"0.25rem"},fontFamily:{"headline-lg":["Geist"],"headline-xl":["Geist"],"code-sm":["JetBrains Mono"],"headline-md":["Geist"],"label-md":["Inter"],"body-md":["Inter"],"code-md":["JetBrains Mono"],"body-lg":["Inter"],"body-sm":["Inter"]},fontSize:{"headline-lg":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-xl":["32px",{lineHeight:"40px",letterSpacing:"-0.03em",fontWeight:"600"}],"code-sm":["11px",{lineHeight:"14px",letterSpacing:"-0.01em",fontWeight:"500"}],"headline-md":["18px",{lineHeight:"24px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"600"}],"body-md":["13px",{lineHeight:"18px",letterSpacing:"-0.005em",fontWeight:"400"}],"code-md":["12px",{lineHeight:"16px",letterSpacing:"-0.02em",fontWeight:"500"}],"body-lg":["15px",{lineHeight:"22px",letterSpacing:"-0.01em",fontWeight:"400"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-full w-sidebar-w bg-surface-container-low z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-unit-lg flex items-center gap-unit-md"><img alt="QA-Helper Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT8oF8nJsNjCir2a2F1GBT9d3vj7uoSkBiIg3HgHjLnr4AE45xvndmycsYtDdP9Lbmzyy7Y6sUePfMI-ag5IO5lbPbN1_t2RJ_tSXTIehYNghjo8wI3cw_Yq_rQV5QXbjhnC_35nFbk0pen3eVopaGHDsLTnHuylnpsV8PyHkw-TaQo7M_XXCrag-R1N9bPklRvLRZIm91RxfIiuxVyipdBvAwejKAw-1WDKTC-Vq4ySFGTW-pwh39"/><div class="flex flex-col"><div class="flex items-center gap-unit-xs"><span class="font-headline-md text-headline-md text-on-surface tracking-tight font-semibold">QA-Helper</span><span class="px-1.5 py-0.5 rounded-lg bg-surface-container-highest text-primary font-code-sm text-code-sm">v0.1</span></div><span class="font-label-md text-label-md text-on-surface-variant truncate max-w-[130px]">Single Source of Truth</span></div></div><div class="px-unit-base py-unit-sm"><div class="px-unit-sm py-unit-2xs mb-unit-xs"><span class="font-label-md text-label-md text-outline uppercase tracking-wider">Navigasi Utama</span></div><nav class="flex flex-col gap-unit-2xs" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a class="flex items-center gap-unit-md px-unit-md py-unit-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dashboard" href="#"><span class="material-symbols-outlined text-unit-lg">grid_view</span><span class="font-body-md text-body-md">Dashboard</span></a><div class="pt-unit-xs flex flex-col gap-unit-2xs"><div class="flex items-center justify-between px-unit-md py-unit-xs text-primary font-body-md text-body-md font-medium"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">auto_awesome</span><span>1. Brainstorm QA Docs</span></div><span class="px-1.5 py-0.5 rounded-lg bg-secondary-container text-on-secondary-fixed text-code-sm font-code-sm">Aktif</span></div><div class="pl-8 flex flex-col gap-unit-2xs pr-unit-xs"><a class="flex items-center gap-unit-sm px-unit-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="input-dokumen-prd" href="#"><span class="material-symbols-outlined text-unit-base">upload_file</span><span class="font-body-sm text-body-sm">Input Dokumen PRD</span></a><a class="flex items-center gap-unit-sm px-unit-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="test-strategy" href="#"><span class="material-symbols-outlined text-unit-base">psychology</span><span class="font-body-sm text-body-sm">Test Strategy</span></a><a class="flex items-center gap-unit-sm px-unit-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="test-plan" href="#"><span class="material-symbols-outlined text-unit-base">checklist</span><span class="font-body-sm text-body-sm">Test Plan</span></a><a aria-current="page" class="flex items-center gap-unit-sm px-unit-sm py-1.5 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg" data-path="test-case" href="#"><span class="material-symbols-outlined text-unit-base">data_object</span><span class="font-body-sm text-body-sm">Test Case</span></a></div></div><div class="flex items-center justify-between px-unit-md py-unit-sm rounded-lg text-outline select-none mt-unit-xs"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">folder_special</span><span class="font-body-md text-body-md">2. Test Case Mgmt</span></div><span class="px-1 py-0.5 rounded-lg bg-surface-container-highest text-on-surface-variant text-code-sm font-code-sm">Segera</span></div><div class="flex items-center justify-between px-unit-md py-unit-sm rounded-lg text-outline select-none"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">play_circle</span><span class="font-body-md text-body-md">3. Test Execution</span></div><span class="px-1 py-0.5 rounded-lg bg-surface-container-highest text-on-surface-variant text-code-sm font-code-sm">Segera</span></div><div class="flex items-center justify-between px-unit-md py-unit-sm rounded-lg text-outline select-none"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">assessment</span><span class="font-body-md text-body-md">4. Test Report</span></div><span class="px-1 py-0.5 rounded-lg bg-surface-container-highest text-on-surface-variant text-code-sm font-code-sm">Segera</span></div></nav></div></div><div class="p-unit-base flex flex-col gap-unit-sm"><nav class="flex flex-col gap-unit-2xs" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a class="flex items-center gap-unit-md px-unit-md py-unit-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pengaturan" href="#"><span class="material-symbols-outlined text-unit-lg">settings</span><span class="font-body-md text-body-md">Pengaturan</span></a><a class="flex items-center gap-unit-md px-unit-md py-unit-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dokumentasi-prd" href="#"><span class="material-symbols-outlined text-unit-lg">menu_book</span><span class="font-body-md text-body-md">Dokumentasi PRD</span></a></nav><div class="px-unit-md py-unit-sm rounded-lg bg-surface-container flex flex-col gap-1"><div class="flex items-center justify-between font-label-md text-label-md text-on-surface-variant"><span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">database</span>Penyimpanan Lokal</span><span class="text-secondary font-code-sm text-code-sm">4 Sesi</span></div><div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden"><div class="bg-secondary h-full rounded-full" style="width: 40%"></div></div><span class="text-code-sm font-code-sm text-outline">4 Sesi Tersimpan di Browser</span></div></div></aside><div class="pl-sidebar-w min-h-screen flex flex-col"><header class="fixed top-0 left-sidebar-w right-0 h-16 bg-surface/90 backdrop-blur-xl z-40 flex items-center justify-between px-unit-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-unit-lg"><div class="flex items-center gap-unit-sm px-unit-md py-1.5 rounded-lg bg-surface-container-low"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-md text-label-md text-on-surface">Siap digunakan</span></div><div class="relative flex items-center w-96"><span class="material-symbols-outlined absolute left-unit-md text-outline pointer-events-none text-unit-lg">search</span><input class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm pl-10 pr-unit-md py-unit-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Cari dokumen atau PRD... (Ctrl + K)" type="text"/></div></div><div class="flex items-center gap-unit-lg"><button aria-label="Notifikasi" class="p-unit-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors relative" type="button"><span class="material-symbols-outlined text-unit-lg">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-tertiary"></span></button><div class="flex items-center gap-unit-md pl-unit-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwW50ekhVx3JwiTf9WqpE9J7drTZfHtyonDPFEd6cUO1xDbCsA_4W5kx1LA17A47lldGTUeQ9I4VE-9laQgcm7IpIVG3rm0Q_9BHburBzH3CqnuYVS6N5MBRwT-9osGPnDlvaBra8XZ7zlKAZOit3AuoV0jvPPd9mpEKcrSKOBeVwdpEWyvlfgG5P6-60h6xqg6o95XNKgXQIG7SP5KTtG3sW5UrZX4PmSyfzpdGNLaaA1TWvaH6p-"/><div class="flex flex-col text-left"><span class="font-body-sm text-body-sm font-medium text-on-surface leading-tight">Mazdandy</span><span class="font-label-md text-label-md text-on-surface-variant leading-none">QA Lead</span></div></div></div></header><main class="flex-1 pt-16 w-full bg-background px-unit-xl py-unit-lg" id="main-content"><div class="flex flex-col w-full gap-unit-base">
+<!-- SESSION TOOLBAR & DRAFT REVIEW HEADER (PRD §5.1, §7.1, §8.6) -->
+<div class="flex flex-col gap-unit-md bg-surface-container-low p-unit-md rounded-xl shadow-md">
+<!-- Top Action Row -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-unit-md">
+<!-- Session Identity & Breadcrumb -->
+<div class="flex flex-col gap-unit-2xs min-w-0">
+<div class="flex items-center gap-unit-xs font-label-md text-label-md text-outline">
+<span class="hover:text-on-surface cursor-pointer transition-colors">Brainstorm QA Docs</span>
+<span class="material-symbols-outlined text-unit-sm">chevron_right</span>
+<span class="text-secondary flex items-center gap-1 font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Sesi Aktif
+          </span>
+</div>
+<div class="flex items-center gap-unit-sm truncate">
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight truncate">
+            Sesi: PRD — Checkout & Payment Gateway v2.4
+          </h1>
+<span class="px-2 py-0.5 rounded-lg bg-surface-container-highest text-primary font-code-sm text-code-sm uppercase">
+            Draft Review
+          </span>
+</div>
+</div>
+<!-- Center Segmented Artifact Switcher -->
+<div class="flex items-center p-1 bg-surface-container-lowest rounded-xl self-start lg:self-center">
+<!-- Tab 1: Test Strategy -->
+<button class="group flex items-center gap-unit-xs px-unit-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" type="button">
+<span class="material-symbols-outlined text-unit-base text-outline group-hover:text-on-surface">psychology</span>
+<span class="font-body-md text-body-md font-medium">Test Strategy</span>
+<span class="px-1.5 py-0.5 rounded-lg bg-surface-container-high text-secondary font-code-sm text-code-sm">Siap</span>
+</button>
+<!-- Tab 2: Test Plan -->
+<button class="group flex items-center gap-unit-xs px-unit-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all" type="button">
+<span class="material-symbols-outlined text-unit-base text-outline group-hover:text-on-surface">checklist</span>
+<span class="font-body-md text-body-md font-medium">Test Plan</span>
+<span class="px-1.5 py-0.5 rounded-lg bg-surface-container-high text-secondary font-code-sm text-code-sm">Siap</span>
+</button>
+<!-- Tab 3: Test Case Matrix (Active) -->
+<button class="flex items-center gap-unit-xs px-unit-md py-1.5 rounded-lg bg-primary-container text-on-primary-container font-semibold shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-unit-base">data_object</span>
+<span class="font-body-md text-body-md">Test Case Matrix</span>
+<span class="px-1.5 py-0.5 rounded-lg bg-surface-container-lowest text-primary font-code-sm text-code-sm font-semibold">24 Cases</span>
+</button>
+</div>
+<!-- Right Export & Auto-Save Telemetry Actions -->
+<div class="flex items-center gap-unit-sm self-end lg:self-center">
+<div class="hidden xl:flex items-center gap-1.5 text-outline font-label-md text-label-md px-unit-xs">
+<span class="material-symbols-outlined text-sm text-secondary animate-pulse">cloud_done</span>
+<span>Tersimpan otomatis 1 menit lalu</span>
+</div>
+<button class="flex items-center gap-1.5 px-unit-md py-1.5 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-bright transition-colors" id="copy-markdown-btn" onclick="navigator.clipboard.writeText('## Test Cases (Auto Generated)'); this.querySelector('span:last-child').textContent='Tersalin!';" type="button">
+<span class="material-symbols-outlined text-unit-base text-primary">content_copy</span>
+<span class="font-body-sm text-body-sm font-medium">Salin Markdown</span>
+</button>
+<div class="relative inline-block text-left" id="export-dropdown-wrapper">
+<button class="flex items-center gap-1.5 px-unit-md py-1.5 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-bright transition-colors" onclick="document.getElementById('export-dropdown-menu').classList.toggle('hidden')" type="button">
+<span class="material-symbols-outlined text-unit-base text-tertiary">download</span>
+<span class="font-body-sm text-body-sm font-medium">Export .MD</span>
+<span class="material-symbols-outlined text-sm text-outline">expand_more</span>
+</button>
+<div class="hidden absolute right-0 mt-1 w-52 rounded-xl bg-surface-container-high shadow-xl p-1 z-50 flex flex-col gap-1" id="export-dropdown-menu">
+<button class="w-full text-left px-unit-sm py-unit-xs rounded-lg text-body-sm text-on-surface hover:bg-surface-container-highest transition-colors flex items-center justify-between" type="button">
+<span>Dokumen ini (Test Case)</span>
+<span class="font-code-sm text-code-sm text-outline">.md</span>
+</button>
+<button class="w-full text-left px-unit-sm py-unit-xs rounded-lg text-body-sm text-on-surface hover:bg-surface-container-highest transition-colors flex items-center justify-between" type="button">
+<span>Gabung Semua Draf (Strategy, Plan, Cases)</span>
+<span class="font-code-sm text-code-sm text-secondary">Full .md</span>
+</button>
+</div>
+</div>
+<button class="flex items-center gap-unit-xs px-unit-md py-1.5 rounded-lg bg-primary-container hover:bg-primary-container/90 text-on-primary-container font-semibold transition-all shadow-md active:scale-95" type="button">
+<span class="material-symbols-outlined text-unit-base">save</span>
+<span class="font-body-sm text-body-sm">Simpan Sesi</span>
+</button>
+</div>
+</div>
+<!-- Quick Stats & Coverage Banner -->
+<div class="flex flex-wrap items-center justify-between gap-unit-md px-unit-md py-2 rounded-lg bg-surface-container-lowest text-body-sm font-body-sm">
+<div class="flex items-center gap-unit-lg flex-wrap">
+<div class="flex items-center gap-2">
+<span class="text-outline">PRD Source:</span>
+<span class="text-on-surface font-code-sm text-code-sm bg-surface-container px-2 py-0.5 rounded-lg">PRD-Checkout-v2.4.docx</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-outline">Cakupan Modul:</span>
+<span class="text-secondary font-medium">3 dari 3 Modul (100% Traceable)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-outline">Distribusi:</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-error"></span> 8 High</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary"></span> 12 Med</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-outline"></span> 4 Low</span>
+</div>
+</div>
+<div class="flex items-center gap-unit-xs text-primary font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-sm">auto_fix_high</span>
+<span>Generated by Rule-Engine v0.1</span>
+</div>
+</div>
+</div>
+<!-- WORKSPACE MAIN INTERACTIVE AREA: TWO COLUMN BENCH -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-unit-base items-start">
+<!-- LEFT DRAWER: PRD CONTEXT, TRACEABILITY & REQ EXPLORER (PRD §5.1, §7.1, §8.5) -->
+<aside class="xl:col-span-3 flex flex-col gap-unit-base bg-surface-container-low p-unit-md rounded-xl shadow-md">
+<!-- Module Selector -->
+<div class="flex flex-col gap-unit-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline">Konteks PRD Aktif</span>
+<span class="px-1.5 py-0.5 rounded-lg bg-surface-container-high text-primary font-code-sm text-code-sm">FR-43 Trace</span>
+</div>
+<div class="p-unit-sm rounded-lg bg-surface-container-lowest flex flex-col gap-1">
+<span class="font-label-md text-label-md text-tertiary font-semibold">MODUL SAAT INI</span>
+<p class="font-body-md text-body-md text-on-surface font-medium">Modul 2: Integrasi Webhook & Callback</p>
+<span class="font-code-sm text-code-sm text-outline">Total 12 Skenario Pengujian</span>
+</div>
+</div>
+<!-- Active Requirement Detail Card -->
+<div class="flex flex-col gap-unit-xs p-unit-sm rounded-lg bg-surface-container flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded-lg bg-primary-container text-on-primary-container font-semibold">REQ-02</span>
+<span class="font-label-md text-label-md text-secondary">Terpetakan (4 Test Cases)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface leading-relaxed">
+          “Sistem harus memvalidasi HMAC signature sebelum mengubah status pembayaran jadi SUCCESS. Callback tanpa signature atau signature cacat harus ditolak dengan status HTTP 401.”
+        </p>
+<div class="pt-unit-xs flex items-center justify-between text-outline font-label-md text-label-md">
+<span>Target Service: Payment Webhook API</span>
+<span class="material-symbols-outlined text-sm text-primary">link</span>
+</div>
+</div>
+<!-- Additional Module Switcher List -->
+<div class="flex flex-col gap-unit-2xs">
+<span class="font-label-md text-label-md uppercase tracking-wider text-outline px-1">Ganti Lingkup Modul</span>
+<div class="flex flex-col gap-1">
+<button class="w-full text-left p-unit-sm rounded-lg bg-surface-container-high/50 hover:bg-surface-container-high transition-colors flex items-center justify-between text-on-surface-variant" type="button">
+<span class="font-body-sm text-body-sm">Modul 1: Inisiasi QRIS & Snap API</span>
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-surface-container-lowest">8 Kasus</span>
+</button>
+<button class="w-full text-left p-unit-sm rounded-lg bg-primary-container/20 text-primary font-medium p-unit-sm flex items-center justify-between" type="button">
+<span class="font-body-sm text-body-sm font-semibold">Modul 2: Webhook & Callback</span>
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container">12 Kasus</span>
+</button>
+<button class="w-full text-left p-unit-sm rounded-lg bg-surface-container-high/50 hover:bg-surface-container-high transition-colors flex items-center justify-between text-on-surface-variant" type="button">
+<span class="font-body-sm text-body-sm">Modul 3: Rekonsiliasi & Settlement</span>
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 rounded bg-surface-container-lowest">4 Kasus</span>
+</button>
+</div>
+</div>
+<!-- Quick Context Info (PRD §7.2) -->
+<div class="p-unit-sm rounded-lg bg-surface-container-lowest flex flex-col gap-unit-xs">
+<div class="flex items-center gap-1.5 text-tertiary">
+<span class="material-symbols-outlined text-unit-base">info</span>
+<span class="font-label-md text-label-md font-semibold uppercase">Catatan Lingkungan Uji</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Staging Sandbox Sandbox-PaymentGateway-v2. Menggunakan endpoint mock simulator webhook dengan latency ±200ms.
+        </p>
+</div>
+<!-- Minimal Coverage Visualization -->
+<div class="p-unit-sm rounded-lg bg-surface-container flex flex-col gap-2">
+<div class="flex items-center justify-between text-label-md font-label-md text-outline">
+<span>Kesiapan Dokumen</span>
+<span class="text-secondary font-code-sm text-code-sm">92% Siap Final</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 92%"></div>
+</div>
+<div class="flex justify-between text-code-sm font-code-sm text-outline">
+<span>24 Generated</span>
+<span>0 Error</span>
+</div>
+</div>
+</aside>
+<!-- RIGHT / MAIN WORKBENCH: TEST CASE TABLE & INLINE EDITING (PRD FR-40, FR-41, FR-42, FR-43) -->
+<section class="xl:col-span-9 flex flex-col gap-unit-base bg-surface-container-low p-unit-md rounded-xl shadow-md">
+<!-- Table Controls & Filter Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-unit-sm">
+<!-- Search & Priority Filters -->
+<div class="flex items-center gap-unit-sm flex-wrap flex-1">
+<div class="relative flex items-center flex-1 min-w-[220px] max-w-sm">
+<span class="material-symbols-outlined absolute left-unit-sm text-outline text-unit-base pointer-events-none">search</span>
+<input class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm pl-8 pr-unit-md py-1.5 rounded-lg focus:outline-none focus:bg-surface-container-high" id="search-tc-input" placeholder="Cari skenario, ID, atau kata kunci..." type="text"/>
+</div>
+<!-- Priority Filter Group -->
+<div class="flex items-center p-0.5 bg-surface-container-lowest rounded-lg">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md" type="button">Semua</button>
+<button class="px-2.5 py-1 rounded-lg text-outline hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> High
+            </button>
+<button class="px-2.5 py-1 rounded-lg text-outline hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Med
+            </button>
+<button class="px-2.5 py-1 rounded-lg text-outline hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Low
+            </button>
+</div>
+</div>
+<!-- Add Test Case Button -->
+<button class="flex items-center gap-1 px-unit-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-surface-bright text-on-surface font-body-sm text-body-sm font-medium transition-colors self-start md:self-auto" onclick="document.getElementById('new-tc-row').classList.toggle('hidden')" type="button">
+<span class="material-symbols-outlined text-unit-base text-secondary">add_circle</span>
+<span>+ Tambah Test Case Baru</span>
+</button>
+</div>
+<!-- Rich Test Case Data Table Container -->
+<div class="overflow-x-auto rounded-xl bg-surface-container-lowest shadow-inner">
+<table class="w-full text-left border-collapse min-w-[900px]">
+<!-- Sticky Header -->
+<thead class="bg-surface-container-high text-outline font-code-sm text-code-sm uppercase tracking-wider sticky top-0 z-10">
+<tr>
+<th class="py-2.5 px-unit-sm w-24" scope="col">ID</th>
+<th class="py-2.5 px-unit-sm w-56" scope="col">Judul Skenario</th>
+<th class="py-2.5 px-unit-sm w-48" scope="col">Pre-condition</th>
+<th class="py-2.5 px-unit-sm w-64" scope="col">Langkah Pengujian</th>
+<th class="py-2.5 px-unit-sm w-64" scope="col">Hasil yang Diharapkan</th>
+<th class="py-2.5 px-unit-sm w-24 text-center" scope="col">Prioritas</th>
+<th class="py-2.5 px-unit-sm w-20 text-center" scope="col">Trace</th>
+<th class="py-2.5 px-unit-sm w-24 text-center" scope="col">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-body-sm font-body-sm text-on-surface">
+<!-- New Inline Row Form (Initially Hidden) -->
+<tr class="hidden bg-surface-container-high/60 transition-all" id="new-tc-row">
+<td class="p-unit-sm font-code-sm text-code-sm text-primary align-top">
+<input class="w-full bg-surface-container-lowest px-1 py-0.5 rounded text-primary font-code-sm focus:outline-none" type="text" value="TC-PAY-006"/>
+</td>
+<td class="p-unit-sm align-top">
+<input class="w-full bg-surface-container-lowest px-2 py-1 rounded text-on-surface text-body-sm focus:outline-none" placeholder="Masukkan judul skenario pengujian..." type="text"/>
+</td>
+<td class="p-unit-sm align-top">
+<input class="w-full bg-surface-container-lowest px-2 py-1 rounded text-on-surface text-body-sm focus:outline-none" placeholder="Syarat awal..." type="text"/>
+</td>
+<td class="p-unit-sm align-top">
+<textarea class="w-full bg-surface-container-lowest px-2 py-1 rounded text-on-surface text-body-sm focus:outline-none" placeholder="1. Langkah satu
+2. Langkah dua" rows="2"></textarea>
+</td>
+<td class="p-unit-sm align-top">
+<textarea class="w-full bg-surface-container-lowest px-2 py-1 rounded text-on-surface text-body-sm focus:outline-none" placeholder="Hasil yang diharapkan..." rows="2"></textarea>
+</td>
+<td class="p-unit-sm align-top text-center">
+<select class="bg-surface-container-lowest text-on-surface text-code-sm rounded p-1 focus:outline-none">
+<option value="HIGH">High</option>
+<option selected="" value="MED">Med</option>
+<option value="LOW">Low</option>
+</select>
+</td>
+<td class="p-unit-sm align-top text-center">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-primary font-code-sm text-code-sm">REQ-02</span>
+</td>
+<td class="p-unit-sm align-top text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 rounded hover:bg-secondary/20 text-secondary" onclick="document.getElementById('new-tc-row').classList.add('hidden')" title="Simpan Baris" type="button">
+<span class="material-symbols-outlined text-unit-base">check</span>
+</button>
+<button class="p-1 rounded hover:bg-error/20 text-error" onclick="document.getElementById('new-tc-row').classList.add('hidden')" title="Batal" type="button">
+<span class="material-symbols-outlined text-unit-base">close</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 1: Validasi HMAC Signature Valid -->
+<tr class="hover:bg-surface-container-high/40 transition-colors group">
+<td class="py-2.5 px-unit-sm font-code-sm text-code-sm text-primary align-top font-medium">TC-PAY-001</td>
+<td class="py-2.5 px-unit-sm align-top font-medium text-on-surface">
+                Validasi HMAC Signature Webhook Valid
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant font-body-sm">
+                Endpoint webhook siap di staging
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant whitespace-pre-line font-code-sm text-code-sm">1. Kirim payload webhook dengan signature valid
+2. Cek response code gateway</td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface">
+                HTTP 200 OK & status order terupdate ke <span class="font-code-sm text-secondary font-semibold">PAID</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-2 py-0.5 rounded-lg bg-error/15 text-error font-code-sm text-code-sm font-semibold">High</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-1.5 py-0.5 rounded-lg bg-surface-container text-primary font-code-sm text-code-sm">REQ-02</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<div class="flex items-center justify-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" title="Edit inline" type="button">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-error" title="Hapus skenario" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Penanganan Webhook Signature Invalid (Unauthorized) -->
+<tr class="bg-surface-container-low/30 hover:bg-surface-container-high/40 transition-colors group">
+<td class="py-2.5 px-unit-sm font-code-sm text-code-sm text-primary align-top font-medium">TC-PAY-002</td>
+<td class="py-2.5 px-unit-sm align-top font-medium text-on-surface">
+                Penanganan Webhook Signature Invalid (Unauthorized)
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant font-body-sm">
+                Payload sengaja diubah hash-nya
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant whitespace-pre-line font-code-sm text-code-sm">1. Kirim payload dengan hash/secret salah
+2. Periksa audit logger</td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface">
+                HTTP 401 Unauthorized & log security tercatat pada internal telemetry
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-2 py-0.5 rounded-lg bg-error/15 text-error font-code-sm text-code-sm font-semibold">High</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-1.5 py-0.5 rounded-lg bg-surface-container text-primary font-code-sm text-code-sm">REQ-02</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<div class="flex items-center justify-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" title="Edit inline" type="button">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-error" title="Hapus skenario" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Idempotency Callback Duplikat -->
+<tr class="hover:bg-surface-container-high/40 transition-colors group">
+<td class="py-2.5 px-unit-sm font-code-sm text-code-sm text-primary align-top font-medium">TC-PAY-003</td>
+<td class="py-2.5 px-unit-sm align-top font-medium text-on-surface">
+                Idempotency Callback Duplikat
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant font-body-sm">
+                Order sudah berstatus PAID
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant whitespace-pre-line font-code-sm text-code-sm">1. Kirim callback ulang untuk order yang sama (same event ID)</td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface">
+                HTTP 200 OK & tidak terjadi <span class="text-tertiary">double-fulfillment</span> stok barang
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-2 py-0.5 rounded-lg bg-tertiary/15 text-tertiary font-code-sm text-code-sm font-semibold">Med</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-1.5 py-0.5 rounded-lg bg-surface-container text-primary font-code-sm text-code-sm">REQ-02</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<div class="flex items-center justify-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" title="Edit inline" type="button">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-error" title="Hapus skenario" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Timeout Gateway saat Transaksi Berlangsung -->
+<tr class="bg-surface-container-low/30 hover:bg-surface-container-high/40 transition-colors group">
+<td class="py-2.5 px-unit-sm font-code-sm text-code-sm text-primary align-top font-medium">TC-PAY-004</td>
+<td class="py-2.5 px-unit-sm align-top font-medium text-on-surface">
+                Timeout Gateway saat Transaksi Berlangsung
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant font-body-sm">
+                Koneksi bank simulasi delay > 30s
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-code-sm text-on-surface-variant whitespace-pre-line font-code-sm">1. Request QRIS dengan network throttled timeout
+2. Pantau UI state</td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface">
+                Tampil status <span class="text-tertiary font-medium">PENDING</span> & tombol check status manual aktif untuk pelanggan
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-2 py-0.5 rounded-lg bg-tertiary/15 text-tertiary font-code-sm text-code-sm font-semibold">Med</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-1.5 py-0.5 rounded-lg bg-surface-container text-primary font-code-sm text-code-sm">REQ-03</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<div class="flex items-center justify-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" title="Edit inline" type="button">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-error" title="Hapus skenario" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Format Tanggal Transaksi pada PDF Invoice -->
+<tr class="hover:bg-surface-container-high/40 transition-colors group">
+<td class="py-2.5 px-unit-sm font-code-sm text-code-sm text-primary align-top font-medium">TC-PAY-005</td>
+<td class="py-2.5 px-unit-sm align-top font-medium text-on-surface">
+                Format Tanggal Transaksi pada PDF Invoice
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface-variant font-body-sm">
+                Order berhasil dibayar
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-code-sm text-on-surface-variant whitespace-pre-line font-code-sm">1. Unduh invoice PDF
+2. Validasi string tanggal billing</td>
+<td class="py-2.5 px-unit-sm align-top text-on-surface">
+                Format tanggal sesuai locale ID (<code class="font-code-sm text-primary">DD-MM-YYYY HH:mm WIB</code>)
+              </td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-2 py-0.5 rounded-lg bg-surface-container-highest text-outline font-code-sm text-code-sm font-semibold">Low</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<span class="inline-block px-1.5 py-0.5 rounded-lg bg-surface-container text-primary font-code-sm text-code-sm">REQ-04</span>
+</td>
+<td class="py-2.5 px-unit-sm align-top text-center">
+<div class="flex items-center justify-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface" title="Edit inline" type="button">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-error" title="Hapus skenario" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Row Summary Footer -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-unit-sm pt-unit-xs text-body-sm font-body-sm text-outline">
+<div class="flex items-center gap-2">
+<span>Menampilkan 5 dari 24 Test Cases</span>
+<span class="px-2 py-0.5 rounded-lg bg-surface-container-highest text-on-surface font-code-sm text-code-sm">Halaman 1 / 5</span>
+</div>
+<div class="flex items-center gap-unit-xs">
+<button class="px-unit-sm py-1 rounded-lg bg-surface-container text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-unit-base">chevron_left</span>
+</button>
+<button class="px-unit-sm py-1 rounded-lg bg-primary-container text-on-primary-container font-semibold" type="button">1</button>
+<button class="px-unit-sm py-1 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors" type="button">2</button>
+<button class="px-unit-sm py-1 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors" type="button">3</button>
+<button class="px-unit-sm py-1 rounded-lg bg-surface-container text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-unit-base">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- BOTTOM SUMMARY / GUIDED QA BRAINSTORM ASSISTANT (PRD §7.2, FR-20, FR-30, FR-40) -->
+<section class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-unit-md p-unit-md rounded-xl bg-gradient-to-r from-surface-container-low via-surface-container to-surface-container-low shadow-md">
+<div class="flex items-start gap-unit-md max-w-3xl">
+<div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-unit-lg">psychology_alt</span>
+</div>
+<div class="flex flex-col gap-unit-2xs">
+<div class="flex items-center gap-unit-xs">
+<span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">Pertanyaan Terpandu QA (PRD §7.2)</span>
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="font-code-sm text-code-sm text-outline">Konteks Beban Sistem</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-snug">
+          “Apakah modul ini memerlukan pengujian <strong>load testing</strong> untuk traffic puncak (mis. event promo Harbolnas 10.000 req/menit)?”
+        </p>
+</div>
+</div>
+<!-- Quick Feedback Actions -->
+<div class="flex items-center gap-unit-sm self-end lg:self-center shrink-0">
+<button class="flex items-center gap-1.5 px-unit-md py-2 rounded-lg bg-primary-container text-on-primary-container font-semibold hover:bg-primary-container/90 transition-all active:scale-95 shadow-sm text-body-sm" onclick="this.closest('section').classList.add('opacity-50');" type="button">
+<span class="material-symbols-outlined text-unit-base">add_task</span>
+<span>Ya, tambahkan ke Test Plan</span>
+</button>
+<button class="px-unit-md py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors text-body-sm" onclick="this.closest('section').remove();" type="button">
+        Abaikan
+      </button>
+</div>
+</section>
+</div>
+<script>
+  // Simple search filter interaction for test cases
+  document.getElementById('search-tc-input')?.addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr:not(#new-tc-row)');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(term) ? '' : 'none';
+    });
+  });
+
+  // Close dropdown on outside click
+  window.addEventListener('click', function(e) {
+    const wrapper = document.getElementById('export-dropdown-wrapper');
+    const menu = document.getElementById('export-dropdown-menu');
+    if (wrapper && menu && !wrapper.contains(e.target)) {
+      menu.classList.add('hidden');
+    }
+  });
+</script></main></div></body></html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>QA-Helper (v0.1 MVP)</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-tertiary":"#472a00","error-container":"#93000a","surface-tint":"#c3c0ff","secondary":"#4edea3","tertiary":"#ffb95f","primary-fixed":"#e2dfff","error":"#ffb4ab","on-primary-fixed-variant":"#3323cc","primary-container":"#4f46e5","inverse-on-surface":"#283044","on-tertiary-fixed":"#2a1700","on-secondary-container":"#00311f","on-error":"#690005","on-tertiary-fixed-variant":"#653e00","on-secondary-fixed":"#002113","on-error-container":"#ffdad6","on-tertiary-container":"#ffd4a4","on-surface-variant":"#c7c4d8","on-primary-fixed":"#0f0069","inverse-surface":"#dae2fd","on-primary":"#1d00a5","surface-container-highest":"#2d3449","on-secondary":"#003824","surface-container-high":"#222a3d","surface-bright":"#31394d","background":"#0b1326","tertiary-fixed":"#ffddb8","surface-container-lowest":"#060e20","surface-dim":"#0b1326","surface-variant":"#2d3449","surface-container-low":"#131b2e","tertiary-container":"#885500","inverse-primary":"#4d44e3","on-surface":"#dae2fd","on-primary-container":"#dad7ff","outline":"#918fa1","surface":"#0b1326","secondary-fixed":"#6ffbbe","tertiary-fixed-dim":"#ffb95f","primary-fixed-dim":"#c3c0ff","outline-variant":"#464555","secondary-container":"#00a572","primary":"#c3c0ff","surface-container":"#171f33","on-secondary-fixed-variant":"#005236","on-background":"#dae2fd","secondary-fixed-dim":"#4edea3"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"sidebar-w":"16rem","unit-sm":"0.5rem","unit-base":"1rem","unit-lg":"1.5rem","inspector-w":"22rem","unit-md":"0.75rem","unit-xl":"2rem","unit-2xs":"0.125rem","gutter-table":"0.75rem","unit-xs":"0.25rem"},fontFamily:{"headline-lg":["Geist"],"headline-xl":["Geist"],"code-sm":["JetBrains Mono"],"headline-md":["Geist"],"label-md":["Inter"],"body-md":["Inter"],"code-md":["JetBrains Mono"],"body-lg":["Inter"],"body-sm":["Inter"]},fontSize:{"headline-lg":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-xl":["32px",{lineHeight:"40px",letterSpacing:"-0.03em",fontWeight:"600"}],"code-sm":["11px",{lineHeight:"14px",letterSpacing:"-0.01em",fontWeight:"500"}],"headline-md":["18px",{lineHeight:"24px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["11px",{lineHeight:"14px",letterSpacing:"0.04em",fontWeight:"600"}],"body-md":["13px",{lineHeight:"18px",letterSpacing:"-0.005em",fontWeight:"400"}],"code-md":["12px",{lineHeight:"16px",letterSpacing:"-0.02em",fontWeight:"500"}],"body-lg":["15px",{lineHeight:"22px",letterSpacing:"-0.01em",fontWeight:"400"}],"body-sm":["12px",{lineHeight:"16px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-full w-sidebar-w bg-surface-container-low z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-unit-lg flex items-center gap-unit-md"><img alt="QA-Helper Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT8oF8nJsNjCir2a2F1GBT9d3vj7uoSkBiIg3HgHjLnr4AE45xvndmycsYtDdP9Lbmzyy7Y6sUePfMI-ag5IO5lbPbN1_t2RJ_tSXTIehYNghjo8wI3cw_Yq_rQV5QXbjhnC_35nFbk0pen3eVopaGHDsLTnHuylnpsV8PyHkw-TaQo7M_XXCrag-R1N9bPklRvLRZIm91RxfIiuxVyipdBvAwejKAw-1WDKTC-Vq4ySFGTW-pwh39"/><div class="flex flex-col"><div class="flex items-center gap-unit-xs"><span class="font-headline-md text-headline-md text-on-surface tracking-tight font-semibold">QA-Helper</span><span class="px-1.5 py-0.5 rounded-lg bg-surface-container-highest text-primary font-code-sm text-code-sm">v0.1</span></div><span class="font-label-md text-label-md text-on-surface-variant truncate max-w-[130px]">Single Source of Truth</span></div></div><div class="px-unit-base py-unit-sm"><div class="px-unit-sm py-unit-2xs mb-unit-xs"><span class="font-label-md text-label-md text-outline uppercase tracking-wider">Navigasi Utama</span></div><nav class="flex flex-col gap-unit-2xs" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a aria-current="page" class="flex items-center gap-unit-md px-unit-md py-unit-sm transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg" data-path="dashboard" href="#"><span class="material-symbols-outlined text-unit-lg">grid_view</span><span class="font-body-md text-body-md">Dashboard</span></a><div class="pt-unit-xs flex flex-col gap-unit-2xs"><div class="flex items-center justify-between px-unit-md py-unit-xs text-primary font-body-md text-body-md font-medium"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">auto_awesome</span><span>1. Brainstorm QA Docs</span></div><span class="px-1.5 py-0.5 rounded-lg bg-secondary-container text-on-secondary-fixed text-code-sm font-code-sm">Aktif</span></div><div class="pl-8 flex flex-col gap-unit-2xs pr-unit-xs"><a class="flex items-center gap-unit-sm px-unit-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="input-dokumen-prd" href="#"><span class="material-symbols-outlined text-unit-base">upload_file</span><span class="font-body-sm text-body-sm">Input Dokumen PRD</span></a><a class="flex items-center gap-unit-sm px-unit-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="test-strategy" href="#"><span class="material-symbols-outlined text-unit-base">psychology</span><span class="font-body-sm text-body-sm">Test Strategy</span></a><a class="flex items-center gap-unit-sm px-unit-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="test-plan" href="#"><span class="material-symbols-outlined text-unit-base">checklist</span><span class="font-body-sm text-body-sm">Test Plan</span></a><a class="flex items-center gap-unit-sm px-unit-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="test-case" href="#"><span class="material-symbols-outlined text-unit-base">data_object</span><span class="font-body-sm text-body-sm">Test Case</span></a></div></div><div class="flex items-center justify-between px-unit-md py-unit-sm rounded-lg text-outline select-none mt-unit-xs"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">folder_special</span><span class="font-body-md text-body-md">2. Test Case Mgmt</span></div><span class="px-1 py-0.5 rounded-lg bg-surface-container-highest text-on-surface-variant text-code-sm font-code-sm">Segera</span></div><div class="flex items-center justify-between px-unit-md py-unit-sm rounded-lg text-outline select-none"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">play_circle</span><span class="font-body-md text-body-md">3. Test Execution</span></div><span class="px-1 py-0.5 rounded-lg bg-surface-container-highest text-on-surface-variant text-code-sm font-code-sm">Segera</span></div><div class="flex items-center justify-between px-unit-md py-unit-sm rounded-lg text-outline select-none"><div class="flex items-center gap-unit-md"><span class="material-symbols-outlined text-unit-lg">assessment</span><span class="font-body-md text-body-md">4. Test Report</span></div><span class="px-1 py-0.5 rounded-lg bg-surface-container-highest text-on-surface-variant text-code-sm font-code-sm">Segera</span></div></nav></div></div><div class="p-unit-base flex flex-col gap-unit-sm"><nav class="flex flex-col gap-unit-2xs" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><a class="flex items-center gap-unit-md px-unit-md py-unit-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pengaturan" href="#"><span class="material-symbols-outlined text-unit-lg">settings</span><span class="font-body-md text-body-md">Pengaturan</span></a><a class="flex items-center gap-unit-md px-unit-md py-unit-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dokumentasi-prd" href="#"><span class="material-symbols-outlined text-unit-lg">menu_book</span><span class="font-body-md text-body-md">Dokumentasi PRD</span></a></nav><div class="px-unit-md py-unit-sm rounded-lg bg-surface-container flex flex-col gap-1"><div class="flex items-center justify-between font-label-md text-label-md text-on-surface-variant"><span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary">database</span>Penyimpanan Lokal</span><span class="text-secondary font-code-sm text-code-sm">4 Sesi</span></div><div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden"><div class="bg-secondary h-full rounded-full" style="width: 40%"></div></div><span class="text-code-sm font-code-sm text-outline">4 Sesi Tersimpan di Browser</span></div></div></aside><div class="pl-sidebar-w min-h-screen flex flex-col"><header class="fixed top-0 left-sidebar-w right-0 h-16 bg-surface/90 backdrop-blur-xl z-40 flex items-center justify-between px-unit-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-unit-lg"><div class="flex items-center gap-unit-sm px-unit-md py-1.5 rounded-lg bg-surface-container-low"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-md text-label-md text-on-surface">Siap digunakan</span></div><div class="relative flex items-center w-96"><span class="material-symbols-outlined absolute left-unit-md text-outline pointer-events-none text-unit-lg">search</span><input class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm font-body-sm pl-10 pr-unit-md py-unit-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Cari dokumen atau PRD... (Ctrl + K)" type="text"/></div></div><div class="flex items-center gap-unit-lg"><button aria-label="Notifikasi" class="p-unit-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors relative" type="button"><span class="material-symbols-outlined text-unit-lg">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-tertiary"></span></button><div class="flex items-center gap-unit-md pl-unit-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwW50ekhVx3JwiTf9WqpE9J7drTZfHtyonDPFEd6cUO1xDbCsA_4W5kx1LA17A47lldGTUeQ9I4VE-9laQgcm7IpIVG3rm0Q_9BHburBzH3CqnuYVS6N5MBRwT-9osGPnDlvaBra8XZ7zlKAZOit3AuoV0jvPPd9mpEKcrSKOBeVwdpEWyvlfgG5P6-60h6xqg6o95XNKgXQIG7SP5KTtG3sW5UrZX4PmSyfzpdGNLaaA1TWvaH6p-"/><div class="flex flex-col text-left"><span class="font-body-sm text-body-sm font-medium text-on-surface leading-tight">Mazdandy</span><span class="font-label-md text-label-md text-on-surface-variant leading-none">QA Lead</span></div></div></div></header><main class="flex-1 pt-16 w-full bg-background px-unit-xl py-unit-lg" id="main-content"><div class="flex flex-col w-full gap-unit-xl pb-unit-xl">
+<!-- Top Greeting & Telemetry Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-unit-md">
+<div class="flex flex-col gap-unit-xs">
+<div class="flex items-center gap-unit-sm">
+<span class="font-code-sm text-code-sm text-primary uppercase tracking-widest">QA-Helper Platform</span>
+<span class="inline-block w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-sm text-code-sm text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          PRD Engine Ready
+        </span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight font-semibold">
+        Selamat Datang di QA-Helper
+      </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+        Single source of truth untuk menyusun dokumen QA terstandar langsung dari input dokumen PRD Anda.
+      </p>
+</div>
+<!-- Quick Environment Indicator -->
+<div class="flex items-center gap-unit-sm bg-surface-container-low px-unit-md py-unit-sm rounded-xl self-start md:self-auto">
+<span class="material-symbols-outlined text-outline text-unit-lg">terminal</span>
+<div class="flex flex-col">
+<span class="font-code-sm text-code-sm text-on-surface">SQLite Local Storage</span>
+<span class="font-label-md text-label-md text-outline">PRD §10 • Monorepo Ready</span>
+</div>
+</div>
+</div>
+<!-- Hero CTA / Active Brainstorm Launch Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-unit-xl shadow-xl">
+<!-- Ambient Accent Glow -->
+<div class="absolute -right-16 -top-16 w-96 h-96 rounded-full bg-primary-container/20 blur-3xl pointer-events-none"></div>
+<div class="absolute right-1/3 -bottom-20 w-80 h-80 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-unit-xl">
+<div class="flex flex-col gap-unit-md max-w-2xl">
+<div class="inline-flex items-center gap-unit-xs px-unit-sm py-1 rounded-lg bg-surface-container-highest self-start">
+<span class="material-symbols-outlined text-secondary text-sm">auto_awesome</span>
+<span class="font-code-sm text-code-sm text-on-surface font-medium">Modul 1: Sesi Brainstorming Terpandu</span>
+</div>
+<div class="flex flex-col gap-unit-xs">
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight">
+            Mulai Brainstorm Dokumen QA Baru
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Ubah PRD menjadi Test Strategy, Test Plan, dan Test Case terstruktur hanya dalam beberapa menit. Unggah dokumen atau tempel teks PRD langsung tanpa konfigurasi rumit.
+          </p>
+</div>
+<div class="flex flex-wrap items-center gap-unit-md pt-unit-xs">
+<a class="inline-flex items-center gap-unit-sm px-unit-lg py-2.5 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md uppercase tracking-wider hover:brightness-110 active:scale-[0.99] transition-all shadow-md" data-path="input-dokumen-prd" href="#">
+<span class="material-symbols-outlined text-unit-base">add_circle</span>
+<span>+ Mulai Sesi Baru dari PRD</span>
+</a>
+<button class="inline-flex items-center gap-unit-sm px-unit-lg py-2.5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md tracking-wider hover:bg-surface-container-high active:scale-[0.99] transition-all" type="button">
+<span class="material-symbols-outlined text-unit-base text-primary">description</span>
+<span>Lihat Contoh PRD E-Commerce</span>
+</button>
+</div>
+</div>
+<!-- Quick Feature Checklist Badge Mosaic -->
+<div class="grid grid-cols-2 gap-unit-sm sm:w-auto lg:w-80 shrink-0">
+<div class="bg-surface-container p-unit-md rounded-lg flex flex-col gap-unit-2xs">
+<div class="flex items-center gap-unit-xs text-primary">
+<span class="material-symbols-outlined text-unit-base">upload_file</span>
+<span class="font-label-md text-label-md uppercase">Ekstraksi File</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">.PDF, .DOCX, .MD</span>
+</div>
+<div class="bg-surface-container p-unit-md rounded-lg flex flex-col gap-unit-2xs">
+<div class="flex items-center gap-unit-xs text-secondary">
+<span class="material-symbols-outlined text-unit-base">psychology</span>
+<span class="font-label-md text-label-md uppercase">Strategy Matrix</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">Scope & Risk Draft</span>
+</div>
+<div class="bg-surface-container p-unit-md rounded-lg flex flex-col gap-unit-2xs">
+<div class="flex items-center gap-unit-xs text-tertiary">
+<span class="material-symbols-outlined text-unit-base">checklist</span>
+<span class="font-label-md text-label-md uppercase">Test Plan</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">Entry & Exit Specs</span>
+</div>
+<div class="bg-surface-container p-unit-md rounded-lg flex flex-col gap-unit-2xs">
+<div class="flex items-center gap-unit-xs text-primary-fixed">
+<span class="material-symbols-outlined text-unit-base">terminal</span>
+<span class="font-label-md text-label-md uppercase">Traceability</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">PRD ID → Test Case</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Telemetry & Metrics Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-unit-base">
+<!-- Stat 1 -->
+<div class="bg-surface-container-low p-unit-lg rounded-xl flex flex-col justify-between gap-unit-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase text-outline tracking-wider">Total Sesi Brainstorm</span>
+<span class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-unit-lg">chat_bubble</span>
+</span>
+</div>
+<div class="flex flex-col gap-unit-2xs">
+<div class="flex items-baseline gap-unit-sm">
+<span class="font-headline-xl text-headline-xl text-on-surface font-semibold">8</span>
+<span class="font-body-md text-body-md text-secondary font-medium">Sesi Aktif</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tersimpan di local SQLite browser</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="bg-surface-container-low p-unit-lg rounded-xl flex flex-col justify-between gap-unit-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase text-outline tracking-wider">Test Case Dihasilkan</span>
+<span class="p-2 rounded-lg bg-surface-container text-secondary">
+<span class="material-symbols-outlined text-unit-lg">fact_check</span>
+</span>
+</div>
+<div class="flex flex-col gap-unit-2xs">
+<div class="flex items-baseline gap-unit-sm">
+<span class="font-headline-xl text-headline-xl text-on-surface font-semibold">142</span>
+<span class="font-body-md text-body-md text-outline">Kandidat</span>
+</div>
+<span class="font-body-sm text-body-sm text-secondary">94% ready to execute</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 94%;"></div>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="bg-surface-container-low p-unit-lg rounded-xl flex flex-col justify-between gap-unit-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase text-outline tracking-wider">Rata-rata Waktu Draf</span>
+<span class="p-2 rounded-lg bg-surface-container text-tertiary">
+<span class="material-symbols-outlined text-unit-lg">timer</span>
+</span>
+</div>
+<div class="flex flex-col gap-unit-2xs">
+<div class="flex items-baseline gap-unit-sm">
+<span class="font-headline-xl text-headline-xl text-on-surface font-semibold">4.5</span>
+<span class="font-body-md text-body-md text-on-surface">Menit</span>
+</div>
+<span class="font-body-sm text-body-sm text-tertiary">Hemat ~85% waktu manual</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 85%;"></div>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="bg-surface-container-low p-unit-lg rounded-xl flex flex-col justify-between gap-unit-md shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase text-outline tracking-wider">Dokumen Tersimpan</span>
+<span class="p-2 rounded-lg bg-surface-container text-primary-fixed">
+<span class="material-symbols-outlined text-unit-lg">folder_open</span>
+</span>
+</div>
+<div class="flex flex-col gap-unit-2xs">
+<div class="flex items-baseline gap-unit-sm">
+<span class="font-headline-xl text-headline-xl text-on-surface font-semibold">12</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Draf</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Strategy, Plan, & Cases</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-primary-fixed h-full rounded-full" style="width: 48%;"></div>
+</div>
+</div>
+</div>
+<!-- Split Main Workbench Layout (Left Table, Right Quick-Access Panel) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-unit-lg items-start">
+<!-- Center Left (8 Cols): Recent Sessions List / Data Table -->
+<div class="xl:col-span-8 flex flex-col gap-unit-base bg-surface-container-low p-unit-lg rounded-xl shadow-sm">
+<!-- Session Header & Search Filtering -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-unit-md pb-unit-xs">
+<div class="flex items-center gap-unit-sm">
+<span class="material-symbols-outlined text-primary text-unit-lg">history</span>
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold">
+            Riwayat Sesi Brainstorming Terakhir
+          </h2>
+<span class="px-2 py-0.5 rounded-lg bg-surface-container text-outline font-code-sm text-code-sm">
+            3 Baru
+          </span>
+</div>
+<div class="flex items-center gap-unit-sm">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-outline pointer-events-none text-unit-base">filter_list</span>
+<input class="bg-surface-container text-on-surface placeholder:text-outline text-body-sm font-body-sm pl-8 pr-unit-md py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary w-44 sm:w-56" id="session-search" placeholder="Saring sesi..." type="text"/>
+</div>
+<button class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Urutkan Waktu" type="button">
+<span class="material-symbols-outlined text-unit-base">swap_vert</span>
+</button>
+</div>
+</div>
+<!-- Sessions List / Table View Clamped to Precision QA density -->
+<div class="flex flex-col gap-unit-sm" id="session-container">
+<!-- Session Card 1 -->
+<div class="session-card bg-surface-container p-unit-md rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-unit-md hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-unit-md min-w-0">
+<div class="p-2.5 rounded-lg bg-surface-container-highest text-secondary shrink-0">
+<span class="material-symbols-outlined text-unit-lg">payments</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-unit-sm flex-wrap">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">PRD — Checkout & Payment Gateway v2.4</span>
+<!-- Pass/Ready Status Chip -->
+<span class="px-2 py-0.5 rounded-lg bg-secondary-container/20 text-secondary font-code-sm text-code-sm">
+                  Selesai
+                </span>
+<span class="font-code-sm text-code-sm text-outline">2 jam lalu</span>
+</div>
+<div class="flex items-center gap-unit-sm text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-outline">layers</span>
+                  Strategy, Plan & 32 Test Cases
+                </span>
+<span class="text-outline-variant">•</span>
+<span class="font-code-sm text-code-sm text-primary">ID: SES-2026-0901</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-unit-xs shrink-0 self-end sm:self-auto">
+<button class="px-unit-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" title="Export Markdown (FR-51)" type="button">
+<span class="material-symbols-outlined text-xs">download</span>
+<span>.md</span>
+</button>
+<a class="px-unit-md py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:brightness-110 transition-colors flex items-center gap-1" data-path="test-case" href="#">
+<span>Buka Workspace</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Session Card 2 -->
+<div class="session-card bg-surface-container p-unit-md rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-unit-md hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-unit-md min-w-0">
+<div class="p-2.5 rounded-lg bg-surface-container-highest text-tertiary shrink-0">
+<span class="material-symbols-outlined text-unit-lg">security</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-unit-sm flex-wrap">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">PRD — Auth & Multi-Factor Login</span>
+<!-- Draft Status Chip -->
+<span class="px-2 py-0.5 rounded-lg bg-tertiary-container/30 text-tertiary font-code-sm text-code-sm">
+                  Draf Tersimpan
+                </span>
+<span class="font-code-sm text-code-sm text-outline">Kemarin</span>
+</div>
+<div class="flex items-center gap-unit-sm text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-outline">checklist</span>
+                  Test Plan & 18 Candidate Cases
+                </span>
+<span class="text-outline-variant">•</span>
+<span class="font-code-sm text-code-sm text-primary">ID: SES-2026-0884</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-unit-xs shrink-0 self-end sm:self-auto">
+<button class="px-unit-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-xs">content_copy</span>
+<span>Salin</span>
+</button>
+<a class="px-unit-md py-1.5 rounded-lg bg-surface-bright text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors flex items-center gap-1" data-path="test-plan" href="#">
+<span>Lanjutkan Brainstorm</span>
+<span class="material-symbols-outlined text-xs">edit_square</span>
+</a>
+</div>
+</div>
+<!-- Session Card 3 -->
+<div class="session-card bg-surface-container p-unit-md rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-unit-md hover:bg-surface-container-high transition-colors">
+<div class="flex items-start gap-unit-md min-w-0">
+<div class="p-2.5 rounded-lg bg-surface-container-highest text-primary-fixed shrink-0">
+<span class="material-symbols-outlined text-unit-lg">subscriptions</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-unit-sm flex-wrap">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">PRD — Subscription & Billing System</span>
+<!-- Complete Status Chip -->
+<span class="px-2 py-0.5 rounded-lg bg-secondary-container/20 text-secondary font-code-sm text-code-sm">
+                  Selesai
+                </span>
+<span class="font-code-sm text-code-sm text-outline">3 hari lalu</span>
+</div>
+<div class="flex items-center gap-unit-sm text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-outline">fact_check</span>
+                  Full Suite 45 Cases (High Prio: 16)
+                </span>
+<span class="text-outline-variant">•</span>
+<span class="font-code-sm text-code-sm text-primary">ID: SES-2026-0812</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-unit-xs shrink-0 self-end sm:self-auto">
+<button class="px-unit-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1.5" title="Export Markdown (FR-51)" type="button">
+<span class="material-symbols-outlined text-xs">download</span>
+<span>.md</span>
+</button>
+<a class="px-unit-md py-1.5 rounded-lg bg-surface-bright text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors flex items-center gap-1" data-path="test-case" href="#">
+<span>Buka</span>
+<span class="material-symbols-outlined text-xs">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Quick Traceability Snapshot (PRD §8.5 FR-43) -->
+<div class="mt-unit-xs p-unit-md bg-surface-container rounded-lg flex flex-col gap-unit-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase text-outline">Bidirectional Traceability Matrix</span>
+<span class="font-code-sm text-code-sm text-secondary">100% PRD Coverage</span>
+</div>
+<div class="flex items-center gap-unit-sm text-body-sm font-body-sm text-on-surface-variant">
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-primary font-code-sm text-code-sm">REQ-AUTH-01</span>
+<span class="material-symbols-outlined text-xs text-outline">arrow_forward</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface font-code-sm text-code-sm">TC-AUTH-001 (Valid OTP)</span>
+<span class="material-symbols-outlined text-xs text-outline">arrow_forward</span>
+<span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary font-code-sm text-code-sm">TC-AUTH-002 (Rate Limit)</span>
+</div>
+</div>
+</div>
+<!-- Right Column (4 Cols): Module Explorer & PRD Guidelines -->
+<div class="xl:col-span-4 flex flex-col gap-unit-base">
+<!-- Module Navigator Card -->
+<div class="bg-surface-container-low p-unit-lg rounded-xl flex flex-col gap-unit-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-unit-xs">
+<span class="material-symbols-outlined text-primary text-unit-lg">view_in_ar</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold">
+              Jelajahi Modul MVP
+            </h3>
+</div>
+<span class="px-2 py-0.5 rounded-lg bg-primary-container text-on-primary-container font-code-sm text-code-sm">
+            v0.1
+          </span>
+</div>
+<div class="flex flex-col gap-unit-xs">
+<!-- Modul Item 1 -->
+<a class="p-unit-sm rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors flex items-start gap-unit-sm" data-path="test-strategy" href="#">
+<span class="material-symbols-outlined text-unit-base text-secondary shrink-0 mt-0.5">psychology</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md font-medium text-on-surface">Test Strategy Generator</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Pendekatan level testing, in/out scope, dan mitigasi risiko.</span>
+</div>
+</a>
+<!-- Modul Item 2 -->
+<a class="p-unit-sm rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors flex items-start gap-unit-sm" data-path="test-plan" href="#">
+<span class="material-symbols-outlined text-unit-base text-tertiary shrink-0 mt-0.5">checklist</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md font-medium text-on-surface">Test Plan Builder</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Jadwal pengujian, environment matrix, dan kriteria keluar (exit).</span>
+</div>
+</a>
+<!-- Modul Item 3 -->
+<a class="p-unit-sm rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors flex items-start gap-unit-sm" data-path="test-case" href="#">
+<span class="material-symbols-outlined text-unit-base text-primary shrink-0 mt-0.5">data_object</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-md text-body-md font-medium text-on-surface">Candidate Test Case Matrix</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Langkah uji presisi, preconditions, data uji, dan prioritas.</span>
+</div>
+</a>
+</div>
+</div>
+<!-- PRD Ingestion Format Guide (FR-02, FR-05) -->
+<div class="bg-surface-container-low p-unit-lg rounded-xl flex flex-col gap-unit-md shadow-sm">
+<div class="flex items-center gap-unit-xs">
+<span class="material-symbols-outlined text-secondary text-unit-lg">info</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold">
+            Panduan Format PRD
+          </h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Agar sistem mendeteksi modul dan functional requirements secara optimal, pastikan dokumen mengikuti ketentuan berikut:
+        </p>
+<div class="flex flex-col gap-unit-xs">
+<div class="flex items-center justify-between p-unit-xs px-unit-sm rounded bg-surface-container font-code-sm text-code-sm">
+<span class="text-on-surface">Ekstensi yang Didukung</span>
+<span class="text-primary font-bold">.md, .pdf, .docx, .txt</span>
+</div>
+<div class="flex items-center justify-between p-unit-xs px-unit-sm rounded bg-surface-container font-code-sm text-code-sm">
+<span class="text-on-surface">Batas Maksimal File</span>
+<span class="text-secondary font-bold">10 MB (FR-05)</span>
+</div>
+<div class="flex items-center justify-between p-unit-xs px-unit-sm rounded bg-surface-container font-code-sm text-code-sm">
+<span class="text-on-surface">Ekstraksi Dokumen</span>
+<span class="text-tertiary font-bold">< 5 Detik</span>
+</div>
+</div>
+<div class="p-unit-sm rounded-lg bg-surface-container-highest flex items-start gap-unit-xs">
+<span class="material-symbols-outlined text-unit-base text-outline shrink-0 mt-0.5">lock</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<strong class="text-on-surface font-medium">Privasi Data (PRD §9):</strong> Dokumen PRD disimpan lokal pada browser/SQLite dan tidak dikirim ke pihak ketiga.
+          </p>
+</div>
+</div>
+<!-- Roadmap Footnote -->
+<div class="p-unit-md rounded-xl bg-surface-container flex items-center justify-between text-outline">
+<span class="font-label-md text-label-md uppercase">Roadmap Fase 2</span>
+<span class="font-code-sm text-code-sm text-primary">Test Case CRUD • Soon</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interaction for filtering session cards
+  const searchInput = document.getElementById('session-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      const cards = document.querySelectorAll('.session-card');
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  }
+</script></main></div></body></html>

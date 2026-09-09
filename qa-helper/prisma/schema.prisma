@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  title      String
+  sourceType String // "paste" | "upload"
+  prdText    String
+  summary    String // ringkasan PRD (markdown)
+  docTypes   String // daftar jenis dokumen yang di-brainstorm, JSON array
+  docsJson   String // draf strategy/plan/testcase, JSON (markdown per jenis)
+  testCasesJson String @default("[]") // data test case terstruktur, JSON array TestCase[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
