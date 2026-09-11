@@ -10,15 +10,13 @@ my-apps/                   # root workspace, satu lockfile
 ├── wedding/               # Undangan website (Next.js + Prisma + SQLite)
 ├── qa-helper/             # QA helper (Next.js + Prisma + SQLite)
 ├── cv-reviewer/           # CV reviewer (Next.js)
-├── yt-downloader/
-│   ├── frontend/          # Next.js
-│   └── backend/           # Express 5 (TypeScript)
-└── landing-page/          # HTML/CSS/JS statis — TIDAK ikut workspace
+└── yt-downloader/
+    ├── frontend/          # Next.js
+    └── backend/           # Express 5 (TypeScript)
 ```
 
 `wedding`, `qa-helper`, `cv-reviewer`, dan kedua app di `yt-downloader` terdaftar di
-`workspaces`. `landing-page` hanya folder statis tanpa `package.json`, jadi tidak ikut
-`npm run dev/build/lint` di root.
+`workspaces`, jadi semuanya ikut `npm run dev/build/lint` di root.
 
 ## Versi utama
 
@@ -59,8 +57,6 @@ npm run dev --workspace=yt-downloader/frontend         # web   :3000
 npm run dev --workspace=wedding -- -p 3001             # web   :3001
 npm run dev --workspace=cv-reviewer -- -p 3002         # web   :3002
 npm run dev --workspace=qa-helper -- -p 3003           # web   :3003
-
-cd landing-page && python3 -m http.server 8000         # statis:8000
 ```
 
 Database SQLite tiap app (Prisma):
