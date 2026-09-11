@@ -1,0 +1,26 @@
+# Build context is the monorepo root, so this replaces the old per-app
+# .dockerignore files.
+
+# Dependencies and build output
+**/node_modules
+**/.next
+**/dist
+**/build
+**/out
+**/coverage
+**/*.tsbuildinfo
+
+# Never bake local databases or secrets into an image
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/.env
+**/.env.*
+!**/.env.example
+
+# Repo metadata / local tooling
+.git
+.gitignore
+.commandcode
+**/*.log
+**/.DS_Store

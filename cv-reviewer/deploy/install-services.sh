@@ -6,7 +6,9 @@
 # ============================================================
 set -euo pipefail
 
-APP_DIR="${APP_DIR:-$HOME/cv-reviewer}"
+# Resolve from this script's own location (deploy/ sits inside the app folder) so it
+# works from any cwd, with or without APP_DIR set.
+APP_DIR="${APP_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 APP_DIR="$(cd "$APP_DIR" && pwd)"
 UNIT_DIR="$APP_DIR/deploy/systemd"
 
@@ -14,16 +16,24 @@ echo "Using app dir: $APP_DIR"
 [ -d "$UNIT_DIR" ] || { echo "systemd unit dir missing: $UNIT_DIR"; exit 1; }
 
 echo "==> Preparing Next.js standalone runtime ..."
-# Next.js standalone output needs .next/static + public copied next to server.js
-if [ -d "$APP_DIR/.next/standalone" ]; then
-  mkdir -p "$APP_DIR/.next/standalone/.next"
-  cp -r "$APP_DIR/.next/static" "$APP_DIR/.next/standalone/.next/static"
-  [ -d "$APP_DIR/public" ] && cp -r "$APP_DIR/public" "$APP_DIR/.next/standalone/public"
-fi
+# Standalone output mirrors the workspace layout, so server.js can be nested
+# (e.g. .next/standalone/cv-reviewer/server.js) instead of sitting directly at
+# .next/standalone/server.js. Locate it, then place .next/static + public beside
+# it, which is where the standalone runtime expects them.
+SERVER_JS="$(find "$APP_DIR/.next/standalone" -maxdepth 4 -type f -name server.js -print -quit 2>/dev/null || true)"
+[ -n "$SERVER_JS" ] || { echo "standalone server.js not found under $APP_DIR/.next/standalone — run 'npm run build' first"; exit 1; }
+SERVER_DIR="$(dirname "$SERVER_JS")"
+echo "    server.js: $SERVER_JS"
+
+mkdir -p "$SERVER_DIR/.next"
+cp -r "$APP_DIR/.next/static" "$SERVER_DIR/.next/static"
+[ -d "$APP_DIR/public" ] && cp -r "$APP_DIR/public" "$SERVER_DIR/public"
 
 echo "==> Installing systemd unit ..."
 sudo mkdir -p /etc/systemd/system
-sudo sed -e "s|__APP_DIR__|$APP_DIR|g" -e "s|__USER__|$USER|g" \
+sudo sed -e "s|__APP_DIR__|$APP_DIR|g" \
+         -e "s|__SERVER_JS__|$SERVER_JS|g" \
+         -e "s|__USER__|$USER|g" \
   "$UNIT_DIR/lotc-cv.service" > /etc/systemd/system/lotc-cv.service
 
 echo "==> Enabling + starting service ..."

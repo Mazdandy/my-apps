@@ -17,7 +17,16 @@ if [ -z "$DOMAIN" ]; then
   exit 1
 fi
 
-APP_DIR="${APP_DIR:-$HOME/cv-reviewer}"
+# This app is part of the my-apps monorepo, which has a single lockfile at the
+# repo root. Resolve paths from this script's own location so the deploy works
+# wherever the repo was cloned.
+APP_DIR="${APP_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+REPO_ROOT="$(cd "$APP_DIR/.." && pwd)"
+[ -f "$REPO_ROOT/package-lock.json" ] || {
+  echo "package-lock.json not found at $REPO_ROOT"
+  echo "Set APP_DIR to the app folder inside a full my-apps clone (not a standalone app copy)."
+  exit 1
+}
 WEDDING_DOMAIN="${WEDDING_DOMAIN:-loveonthe.cloud}"
 DOWNLOADER_DOMAIN="${DOWNLOADER_DOMAIN:-downloader.loveonthe.cloud}"
 
@@ -38,10 +47,10 @@ if ! command -v caddy >/dev/null 2>&1; then
   sudo apt-get install -y caddy
 fi
 
-echo "==> 2/4 Building app..."
-cd "$APP_DIR"
-NODE_ENV=development npm ci
-env -u NODE_ENV npm run build
+echo "==> 2/4 Building app (from monorepo root)..."
+cd "$REPO_ROOT"
+NODE_ENV=development npm ci --include=dev
+env -u NODE_ENV npm run build --workspace=lotc-cv-reviewer
 
 echo "==> 3/4 Writing Caddyfile for $DOMAIN (+ $WEDDING_DOMAIN, $DOWNLOADER_DOMAIN)..."
 # NOTE: this rewrites the whole Caddyfile, so all three apps on this VPS
@@ -77,7 +86,7 @@ CADDY
 sudo systemctl reload caddy
 
 echo "==> 4/4 Installing systemd service..."
-APP_DIR="$APP_DIR" bash deploy/install-services.sh
+APP_DIR="$APP_DIR" bash "$APP_DIR/deploy/install-services.sh"
 
 echo ""
 echo "Done! Service:"

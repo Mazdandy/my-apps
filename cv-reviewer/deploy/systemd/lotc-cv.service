@@ -9,7 +9,7 @@ WorkingDirectory=__APP_DIR__
 Environment=NODE_ENV=production
 Environment=PORT=3002
 Environment=HOSTNAME=0.0.0.0
-ExecStart=/usr/bin/node __APP_DIR__/.next/standalone/server.js
+ExecStart=/usr/bin/node __SERVER_JS__
 Restart=always
 RestartSec=3
 

@@ -1,11 +1,12 @@
 # Render Blueprint — LOTC - Video Downloader Backend
-# Deploy via: Render dashboard → Blueprint → point at this repo (subdirectory: backend)
+# Deploy via: Render dashboard → Blueprint → point at the monorepo repo root.
 services:
   - type: web
     name: video-downloader-backend
     runtime: docker
-    rootDir: backend
-    dockerfilePath: Dockerfile
+    # Context must be the repo root: the npm lockfile lives there, not in backend/.
+    dockerContext: .
+    dockerfilePath: yt-downloader/backend/Dockerfile
     healthCheckPath: /api/v1/health
     envVars:
       - key: NODE_ENV

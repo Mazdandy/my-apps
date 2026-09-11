@@ -12,11 +12,16 @@ Platform undangan digital berlangganan (Subscription-as-a-Service). User berlang
 
 ## Setup
 
+App ini bagian dari monorepo `my-apps`. Lockfile cuma ada di root repo, jadi install dari
+sana — bukan dari dalam folder app:
+
 ```bash
-npm install
-npm run db:migrate   # buat schema (prisma migrate dev)
-npm run seed         # isi data demo
-npm run dev
+# dari root my-apps
+npm install --include=dev
+
+npm run db:migrate --workspace=faas-wedding-scaffold   # buat schema (prisma migrate dev)
+npm run seed       --workspace=faas-wedding-scaffold   # isi data demo
+npm run dev        --workspace=faas-wedding-scaffold   # http://localhost:3000
 ```
 
 Buka http://localhost:3000
@@ -86,13 +91,13 @@ Runs on a VPS alongside the YT Downloader. Caddy routes by subdomain:
 
 Requirements: Ubuntu 22.04/24.04 VPS, DNS A records for both domains pointing to the server.
 
-1. **On the server**, clone the repo:
+1. **On the server**, clone the monorepo (the single lockfile lives at its root):
    ```bash
-   git clone <your-repo-url> && cd wedding
+   git clone <monorepo-url> my-apps && cd my-apps
    ```
 2. **Run the setup script** (installs Node 22 + Caddy, builds the app, applies the DB schema + seed, writes the Caddyfile for both subdomains, installs and starts the service):
    ```bash
-   bash deploy/setup-vps.sh loveonthe.cloud
+   bash wedding/deploy/setup-vps.sh loveonthe.cloud
    ```
 3. Visit `https://loveonthe.cloud` — Caddy provisions the HTTPS cert automatically.
 
@@ -103,14 +108,17 @@ systemctl status faas-wedding     # check status
 journalctl -u faas-wedding -f     # watch logs
 ```
 
-**Updating after a `git pull`:**
+**Updating after a `git pull`** (from the monorepo root):
 
 ```bash
-cd wedding && NODE_ENV=development npm ci && env -u NODE_ENV npm run build
-bash deploy/install-services.sh   # copies static assets + reinstalls/restarts service
+NODE_ENV=development npm ci --include=dev
+env -u NODE_ENV npm run build --workspace=faas-wedding-scaffold
+bash wedding/deploy/install-services.sh   # static assets + reinstall/restart service
 ```
 
-> The `NODE_ENV=development` prefix on `npm ci` is required because npm skips devDependencies (build tools) when `NODE_ENV=production` is set in the shell. The `env -u NODE_ENV` before the build unsets it again so `next build` runs in production mode.
+> `--include=dev` is required because npm skips devDependencies (build tools) when `NODE_ENV=production` is set in the shell. The `env -u NODE_ENV` before the build unsets it again so `next build` runs in production mode.
+>
+> `deploy/install-services.sh` locates the Next.js standalone `server.js` itself — under the monorepo it lands at `.next/standalone/wedding/server.js`, not directly in `.next/standalone/`.
 
 **Notes:**
 - The app runs on port `3001` to avoid clashing with the downloader's frontend on `3000`.

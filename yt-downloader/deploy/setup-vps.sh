@@ -13,7 +13,16 @@ if [ -z "$DOMAIN" ]; then
   exit 1
 fi
 
-APP_DIR="${APP_DIR:-$HOME/yt-downloader}"
+# This app is part of the my-apps monorepo, which has a single lockfile at the
+# repo root. Resolve paths from this script's own location so the deploy works
+# wherever the repo was cloned.
+APP_DIR="${APP_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+REPO_ROOT="$(cd "$APP_DIR/.." && pwd)"
+[ -f "$REPO_ROOT/package-lock.json" ] || {
+  echo "package-lock.json not found at $REPO_ROOT"
+  echo "Set APP_DIR to the app folder inside a full my-apps clone (not a standalone app copy)."
+  exit 1
+}
 
 echo "==> 1/6 Installing system packages (node 22, python3, ffmpeg, git, caddy)..."
 # NodeSource repo for a current Node
@@ -38,17 +47,17 @@ pip3 install --user --upgrade yt-dlp
 export PATH="$HOME/.local/bin:$PATH"
 grep -q '.local/bin' "$HOME/.bashrc" 2>/dev/null || echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.bashrc"
 
-echo "==> 3/6 Building backend..."
-cd "$APP_DIR/backend"
-NODE_ENV=development npm ci
-npm run build
+echo "==> 3/6 Building backend (from monorepo root)..."
+cd "$REPO_ROOT"
+# One install covers both workspaces; --include=dev because the build needs
+# typescript and the frontend's build tools.
+NODE_ENV=development npm ci --include=dev
+npm run build --workspace=video-downloader-backend
 
 echo "==> 4/6 Building frontend..."
-cd "$APP_DIR/frontend"
-NODE_ENV=development npm ci
 # Same-origin API (frontend and backend behind the same Caddy domain)
 # NEXT_PUBLIC_API_URL is not set -> lib/api.ts uses relative /api paths
-env -u NODE_ENV npm run build
+env -u NODE_ENV npm run build --workspace=video-downloader-frontend
 
 echo "==> 5/6 Writing Caddyfile for $DOMAIN..."
 sudo tee /etc/caddy/Caddyfile >/dev/null <<CADDY
@@ -66,7 +75,7 @@ CADDY
 sudo systemctl reload caddy
 
 echo "==> 6/6 Installing systemd services..."
-APP_DIR="$APP_DIR" bash deploy/install-services.sh
+APP_DIR="$APP_DIR" bash "$APP_DIR/deploy/install-services.sh"
 
 echo ""
 echo "Done! Services:"

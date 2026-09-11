@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 
 /* Material Symbols + Inter are loaded via <link> in app/layout.tsx (same as the mockups) */
 

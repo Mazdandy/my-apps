@@ -11,7 +11,7 @@ Environment=PORT=3001
 Environment=HOSTNAME=0.0.0.0
 # Public base URL for share links / WhatsApp invitations
 Environment=APP_URL=https://loveonthe.cloud
-ExecStart=/usr/bin/node __APP_DIR__/.next/standalone/server.js
+ExecStart=/usr/bin/node __SERVER_JS__
 Restart=always
 RestartSec=3
 

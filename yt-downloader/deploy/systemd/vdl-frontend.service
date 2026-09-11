@@ -11,7 +11,7 @@ Environment=PORT=3000
 Environment=HOSTNAME=0.0.0.0
 # Same-origin API by default; for a split deploy set the backend URL here
 # Environment=NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-ExecStart=/usr/bin/node __APP_DIR__/frontend/.next/standalone/server.js
+ExecStart=/usr/bin/node __SERVER_JS__
 Restart=always
 RestartSec=3
 

@@ -2,7 +2,10 @@
 
 Multi-platform video downloader (YouTube · TikTok · Instagram Reels) built from the
 [PRD](./PRD_Video_Downloader.md). Backend is Node.js + Express + TypeScript using
-[yt-dlp](https://github.com/yt-dlp/yt-dlp) for extraction. Frontend is Next.js 14.
+[yt-dlp](https://github.com/yt-dlp/yt-dlp) for extraction. Frontend is Next.js 16.
+
+> **Monorepo:** this app lives in `my-apps`. There is a single `package-lock.json` at the
+> repo root, so always install from there — never inside `backend/` or `frontend/`.
 
 > **No server storage** — videos are downloaded to a temp file, streamed directly to the
 > user's device, then deleted (PRD §9.2 / FR-16).
@@ -24,7 +27,7 @@ Multi-platform video downloader (YouTube · TikTok · Instagram Reels) built fro
 │       │   ├── parseService.ts
 │       │   └── downloadManager.ts  # Queue, concurrency cap 3, retries, cancel
 │       └── types.ts
-└── frontend/                 # Next.js 14 App Router (port 3000)
+└── frontend/                 # Next.js 16 App Router (port 3000)
     ├── app/
     │   ├── page.tsx          # Paste URL → quality select → progress → history
     │   ├── layout.tsx        # Root layout (Inter, Material Symbols, light mode)
@@ -44,31 +47,25 @@ Multi-platform video downloader (YouTube · TikTok · Instagram Reels) built fro
 ## Quick Start
 
 ```bash
+# from the my-apps repo root
+npm install --include=dev
+
 # Terminal 1 — backend
-cd backend
-NODE_ENV=development npm install
-npm run dev                  # http://localhost:8787
+npm run dev --workspace=video-downloader-backend    # http://localhost:8787
 
 # Terminal 2 — frontend
-cd frontend
-NODE_ENV=development npm install
-npm run dev                  # http://localhost:3000
+npm run dev --workspace=video-downloader-frontend   # http://localhost:3000
 ```
 
 > **Note on `NODE_ENV`:** both apps keep all build tools (`typescript`, `tailwindcss`,
 > `postcss`, …) in `devDependencies`. npm **skips devDependencies** when it sees
 > `NODE_ENV=production` in the shell, so the build then fails with "tsc: command not
-> found". If your shell or CI sets `NODE_ENV=production`, prefix installs with
-> `NODE_ENV=development`:
+> found". Install from the repo root with `npm install --include=dev` (or
+> `NODE_ENV=development npm ci`).
 >
-> ```bash
-> cd backend && NODE_ENV=development npm ci
-> cd ../frontend && NODE_ENV=development npm ci
-> ```
->
-> The frontend `build` script already sets `NODE_ENV=production` itself, so when you
-> build it, unset the variable (`env -u NODE_ENV npm run build`) so the shell's value
-> doesn't leak in and force a development build.
+> The frontend `build` script sets `NODE_ENV=production` itself, so when you build it,
+> unset the variable so the shell's value doesn't leak in and force a development build:
+> `env -u NODE_ENV npm run build --workspace=video-downloader-frontend`.
 
 ## API
 
@@ -136,15 +133,15 @@ This is the simplest if you have a VPS. Everything is scripted in `deploy/`.
 
 Requirements: Ubuntu 22.04/24.04 VPS, a domain pointing to the server IP.
 
-1. **On the server**, clone the repo:
+1. **On the server**, clone the monorepo (the single lockfile lives at its root):
    ```bash
-   git clone <your-repo-url> && cd yt-downloader
+   git clone <monorepo-url> my-apps && cd my-apps
    ```
 
 2. **Run the setup script** (installs Node 22, Python, ffmpeg, Caddy, yt-dlp; builds both
    apps; writes the Caddyfile; installs and starts the services):
    ```bash
-   bash deploy/setup-vps.sh your-domain.com
+   bash yt-downloader/deploy/setup-vps.sh your-domain.com
    ```
 
 3. Visit `https://your-domain.com` — Caddy provisions the HTTPS cert automatically.
@@ -157,18 +154,24 @@ journalctl -u vdl-backend -f                  # watch backend logs
 journalctl -u vdl-frontend -f                 # watch frontend logs
 ```
 
-**Updating after a `git pull`:**
+**Updating after a `git pull`** (from the repo root — one install, two builds):
 
 ```bash
-cd backend && NODE_ENV=development npm ci && npm run build
-cd ../frontend && NODE_ENV=development npm ci && env -u NODE_ENV npm run build
-bash deploy/install-services.sh   # copies static assets + reinstalls/restarts services
+NODE_ENV=development npm ci --include=dev
+npm run build --workspace=video-downloader-backend
+env -u NODE_ENV npm run build --workspace=video-downloader-frontend
+bash yt-downloader/deploy/install-services.sh   # static assets + reinstall/restart services
 ```
 
-> The `NODE_ENV=development` prefix on `npm ci` is required because npm skips
+> One `npm ci` at the repo root covers both workspaces — that's where the only
+> `package-lock.json` lives. `--include=dev` is required because npm skips
 > devDependencies (build tools) when `NODE_ENV=production` is set in the shell.
 > The `env -u NODE_ENV` before the frontend build unsets it again so `next build`
 > runs in production mode (its script sets `NODE_ENV=production` itself).
+>
+> `deploy/install-services.sh` locates the Next.js standalone `server.js` itself — under
+> the monorepo it lands at `frontend/.next/standalone/yt-downloader/frontend/server.js`,
+> not directly in `.next/standalone/`.
 
 **How it's wired:** Caddy (`/etc/caddy/Caddyfile`) proxies `/api/*` → `127.0.0.1:8787`
 (backend) and everything else → `127.0.0.1:3000` (frontend). Both run under systemd and
@@ -183,12 +186,13 @@ real domain.
 Requirements: a VPS (any Linux, 1 GB RAM+), Docker + Docker Compose, and a domain name
 pointing to the server's IP.
 
-1. **On the server**, clone the repo:
+1. **On the server**, clone the monorepo and enter this app:
    ```bash
-   git clone <your-repo-url> && cd yt-downloader
+   git clone <monorepo-url> my-apps && cd my-apps/yt-downloader
    ```
 2. **Set your domain** in `Caddyfile` (replace `your-domain.com`).
-3. **Start everything**:
+3. **Start everything** — `docker-compose.yml` builds both images with the repo root as
+   build context, which is where the lockfile lives:
    ```bash
    docker compose up -d --build
    ```
@@ -208,10 +212,12 @@ and visit `http://<server-ip>:3000`.
 
 **Backend** — a `Dockerfile` (with `yt-dlp` + `ffmpeg` baked in) is in `backend/`:
 
-- **Railway**: create a new project → Deploy from repo → root directory `backend`.
-  `railway.json` is already present; the Dockerfile is auto-detected.
-- **Render**: Blueprint deploy (uses `render.yaml`), or Web Service → Docker → root `backend`.
-- **Fly.io**: `fly launch` in `backend/`, Dockerfile is picked up automatically.
+- **Railway**: Deploy from repo, and set the service **Root Directory** to the repo root
+  (not `backend/`) so the build context contains the lockfile.
+- **Render**: Blueprint deploy (uses `render.yaml`), or Web Service → Docker with
+  dockerfile path `yt-downloader/backend/Dockerfile` and context `.`.
+- **Fly.io**: the build context must be the repo root, so point `fly deploy` at
+  `yt-downloader/backend/Dockerfile` and run it from the repo root.
 
 Required env vars:
 

@@ -1,6 +1,9 @@
 services:
   backend:
-    build: ./backend
+    # Build context is the monorepo root: the npm lockfile only exists there.
+    build:
+      context: ..
+      dockerfile: yt-downloader/backend/Dockerfile
     restart: unless-stopped
     environment:
       PORT: 8787
@@ -12,7 +15,9 @@ services:
       - vdl-tmp:/tmp/vdl
 
   frontend:
-    build: ./frontend
+    build:
+      context: ..
+      dockerfile: yt-downloader/frontend/Dockerfile
     restart: unless-stopped
     environment:
       PORT: 3000
