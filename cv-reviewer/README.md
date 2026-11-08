@@ -58,3 +58,7 @@ cukup berlebih.
 > **Catatan biaya:** semua pengunjung memakai saldo AtmoRouter kamu. Kendalikan risiko
 > via `Dashboard → Budgets` di atmorouter.dev (batas harga per model) dan isi saldo
 > seperlunya. `api/config.php` di-ignore git — jangan pernah commit key asli.
+>
+> **Rate limit:** `review.php` membatasi **5 review per IP per jam** (counter file di
+> `api/../.rate-limit/`, tanpa database). Ubah angkanya di `review.php` bila perlu.
+> `api/test-rate-limit.php` adalah unit test CLI (`php api/test-rate-limit.php`).

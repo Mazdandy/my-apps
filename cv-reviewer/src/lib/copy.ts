@@ -24,7 +24,7 @@ const copy = {
     },
     errors: {
       missing_api_key: "Layanan AI belum dikonfigurasi oleh pemilik situs.",
-      rate_limited: "Batas kuota AtmoRouter tercapai. Coba lagi nanti.",
+      rate_limited: "Terlalu banyak review dalam satu jam. Coba lagi nanti.",
       invalid_output: "Hasil analisis tidak valid. Coba lagi.",
       upstream: "Gagal menganalisis CV. Coba lagi.",
     },
@@ -47,7 +47,7 @@ const copy = {
     },
     errors: {
       missing_api_key: "The AI service is not configured yet by the site owner.",
-      rate_limited: "AtmoRouter quota reached. Try again later.",
+      rate_limited: "Too many reviews this hour. Try again later.",
       invalid_output: "The analysis result was invalid. Try again.",
       upstream: "Could not analyze the CV. Try again.",
     },

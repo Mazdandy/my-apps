@@ -17,13 +17,35 @@ declare(strict_types=1);
 const UPSTREAM_URL = 'https://atmorouter.dev/v1/chat/completions';
 const MAX_BODY_BYTES = 262144; // 256 KB — cukup untuk CV + job description.
 
-$config = require __DIR__ . '/config.php';
+require_once __DIR__ . '/rate-limit.php';
+
+$configFile = __DIR__ . '/config.php';
+if (!is_file($configFile)) {
+    http_response_code(503);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['error' => ['message' => 'Layanan AI belum dikonfigurasi. Duplikat config.example.php menjadi config.php lalu isi API key.', 'type' => 'missing_api_key']]);
+    exit;
+}
+$config = require $configFile;
 
 header('Content-Type: application/json; charset=utf-8');
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => ['message' => 'Method not allowed.', 'type' => 'proxy']]);
+    exit;
+}
+
+// Rate limit per IP: API key pemilik situs yang menanggung biaya, jadi
+// pemakaian per pengunjung dibatasi di sini. Counter disimpan di folder
+// di luar document root kalau bisa; fallback ke sys_get_temp_dir().
+$rateLimitDir = dirname(__DIR__) . '/.rate-limit';
+if (!is_dir($rateLimitDir)) {
+    $rateLimitDir = sys_get_temp_dir() . '/cv-reviewer-rate-limit';
+}
+if (!rate_limit_allow($rateLimitDir, client_ip(), limit: 5, windowSec: 3600)) {
+    http_response_code(429);
+    echo json_encode(['error' => ['message' => 'Terlalu banyak review dalam satu jam. Coba lagi nanti.', 'type' => 'rate_limited']]);
     exit;
 }
 
@@ -70,7 +92,7 @@ curl_setopt_array($ch, [
 $response = curl_exec($ch);
 $curlError = curl_error($ch);
 $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-curl_close($ch);
+// curl_close() deprecated sejak PHP 8.5 dan tidak berefek sejak 8.0 — dilewati.
 
 if ($response === false) {
     http_response_code(502);
