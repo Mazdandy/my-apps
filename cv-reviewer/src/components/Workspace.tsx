@@ -1,35 +1,35 @@
-"use client";
-
+import { useMemo, useRef, useState } from "react";
+import type { ChangeEvent, DragEvent } from "react";
 import {
   ArrowRight,
   Check,
-  ChevronRight,
-  Clock3,
   FileCheck2,
   FileText,
+  ListChecks,
   History,
   LayoutDashboard,
-  Menu,
-  Search,
+  PlayCircle,
+  ScanSearch,
   ShieldCheck,
-  Sparkles,
+  Search,
   Target,
   Trash2,
   UploadCloud,
+  Verified,
   X,
+  Zap,
 } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
-import type { ChangeEvent, DragEvent } from "react";
 import { ResultView } from "@/components/ResultView";
 import { getCopy } from "@/lib/copy";
 import { ExtractError, extractText } from "@/lib/extract";
 import { ReviewError, reviewCv } from "@/lib/atmorouter";
 import type { Locale } from "@/lib/prompt";
-import type { ReviewResult } from "@/lib/review";
+import { CATEGORY_KEYS, CATEGORY_WEIGHTS, type ReviewResult } from "@/lib/review";
 import { translations } from "@/lib/translations";
 
 type View = "review" | "history";
 type Phase = "extracting" | "analyzing";
+type InputMode = "file" | "text";
 
 type HistoryEntry = {
   id: number;
@@ -55,6 +55,12 @@ UI/UX Designer — Studio Kreasi (2021–2023)
 
 KEAHLIAN
 Figma, Prototyping, User Research, Design System`;
+
+const demoJd = `Kualifikasi Utama:
+- Minimal 3+ tahun pengalaman sebagai Product Designer di produk digital.
+- Menguasai design system dan tooling Figma tingkat lanjut.
+- Terbiasa user research, usability testing, dan iterasi berbasis data.
+- Nyaman bekerja lintas fungsi dengan engineer dan product manager.`;
 
 const HISTORY_KEY = "lotc.reviewHistory";
 const HISTORY_LIMIT = 20;
@@ -85,7 +91,7 @@ export function Workspace({ lang }: { lang: Locale }) {
   const c = getCopy(lang);
 
   const [view, setView] = useState<View>("review");
-  const [mobileNav, setMobileNav] = useState(false);
+  const [inputMode, setInputMode] = useState<InputMode>("file");
   const [cvText, setCvText] = useState("");
   const [jdText, setJdText] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -123,6 +129,7 @@ export function Workspace({ lang }: { lang: Locale }) {
     setFile(next);
     setCvText("");
     setFileError("");
+    setInputMode("file");
     resetOutput();
   }
 
@@ -130,6 +137,15 @@ export function Workspace({ lang }: { lang: Locale }) {
     event.preventDefault();
     setIsDragging(false);
     acceptFile(event.dataTransfer.files[0]);
+  }
+
+  function loadDemo() {
+    setFile(null);
+    setCvText(demoCv);
+    setJdText(demoJd);
+    setInputMode("text");
+    setFileError("");
+    resetOutput();
   }
 
   async function analyze() {
@@ -198,32 +214,33 @@ export function Workspace({ lang }: { lang: Locale }) {
     setHistory([]);
   }
 
+  const stats = [
+    { icon: <Zap size={20} />, tone: "ink", ...t.upload.statTime },
+    { icon: <Verified size={20} />, tone: "emerald", ...t.upload.statRubric },
+    { icon: <ScanSearch size={20} />, tone: "crimson", ...t.upload.statEvidence },
+  ];
+
   return (
     <div className="app-shell">
-      <aside className={`sidebar ${mobileNav ? "sidebar-open" : ""}`}>
+      <header className="topnav">
         <div className="brand">
           <div className="brand-mark">L</div>
-          <div><strong>LOTC</strong><span>CV Reviewer</span></div>
+          <div><strong>LOTC / CV Reviewer</strong><span>AUDIT ENGINE V2.4</span></div>
         </div>
-        <button className="close-nav icon-button" onClick={() => setMobileNav(false)} aria-label="Tutup menu"><X size={20} /></button>
         <nav>
-          <button className={view === "review" ? "active" : ""} onClick={() => { setView("review"); setMobileNav(false); }}>
-            <LayoutDashboard size={19} /> {t.nav.review}
+          <button className={view === "review" ? "active" : ""} onClick={() => setView("review")}>
+            <LayoutDashboard size={17} /> {t.nav.review}
           </button>
-          <button className={view === "history" ? "active" : ""} onClick={() => { setView("history"); setMobileNav(false); }}>
-            <History size={19} /> {t.nav.history} {history.length > 0 && <span className="nav-count">{history.length}</span>}
+          <button className={view === "history" ? "active" : ""} onClick={() => setView("history")}>
+            <History size={17} /> {t.nav.history} {history.length > 0 && <span className="nav-count">{history.length}</span>}
           </button>
         </nav>
-      </aside>
-      {mobileNav && <button className="nav-backdrop" onClick={() => setMobileNav(false)} aria-label="Tutup menu" />}
+        <div className="topnav-meta">
+          <span className="topnav-quota"><ShieldCheck size={15} /> {c.nav.secure}</span>
+        </div>
+      </header>
 
       <main>
-        <header className="topbar">
-          <button className="menu-button icon-button" onClick={() => setMobileNav(true)} aria-label="Buka menu"><Menu size={21} /></button>
-          <div><span className="eyebrow">{c.nav.workspace}</span><h1>{view === "review" ? t.nav.review : t.nav.history}</h1></div>
-          <div className="secure-note"><ShieldCheck size={16} /> {c.nav.secure}</div>
-        </header>
-
         {view === "history" ? (
           <HistoryView
             history={history}
@@ -247,57 +264,163 @@ export function Workspace({ lang }: { lang: Locale }) {
             t={t}
           />
         ) : (
-          <section className="workspace">
-            <div className="page-intro">
-              <div><span className="section-kicker">{t.upload.kicker}</span><h2>{t.upload.heading}</h2><p>{t.upload.subheading}</p></div>
-              <div className="step-indicator"><span className="current">1</span><i /><span>2</span><i /><span>3</span></div>
-            </div>
+          <>
+            {/* Hero editorial + telemetry stats */}
+            <section className="hero-card">
+              <div className="hero-top">
+                <span className="engine-badge"><i />{t.upload.engineBadge}</span>
+                <span className="diag-status">
+                  <span className="diag-label">{t.upload.diagLabel}</span>
+                  <span className="diag-value">{t.upload.diagValue}</span>
+                </span>
+              </div>
+              <h1 className="hero-title">{t.upload.heroHeading}</h1>
+              <p className="hero-desc">{t.upload.heroDesc}</p>
+              <div className="stat-grid">
+                {stats.map((stat) => (
+                  <div className="stat-tile" key={stat.label}>
+                    <span className={`stat-icon ${stat.tone}`}>{stat.icon}</span>
+                    <span className="stat-label">{stat.label}</span>
+                    <strong className="stat-value">{stat.value}</strong>
+                    <span className="stat-desc">{stat.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
 
-            <div className="input-grid">
-              <section className="panel cv-panel">
-                <div className="panel-heading"><span className="number">1</span><div><h3>{t.upload.cvTitle}</h3><p>{t.upload.cvDesc}</p></div><span className="required">WAJIB</span></div>
-                <div
-                  className={`dropzone ${isDragging ? "dragging" : ""} ${fileName ? "has-file" : ""}`}
-                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                  onDragLeave={() => setIsDragging(false)}
-                  onDrop={onDrop}
-                >
-                  {fileName ? (
-                    <><div className="file-icon"><FileCheck2 size={25} /></div><div><strong>{fileName}</strong><span>File siap dianalisis</span></div><button className="icon-button" onClick={(e) => { e.stopPropagation(); setFile(null); }} aria-label="Hapus file"><X size={18} /></button></>
+            <div className="ingest-grid">
+              {/* Kolom kiri: ingest CV */}
+              <div className="ingest-left">
+                <section className="panel">
+                  <div className="panel-heading">
+                    <div className="panel-title"><FileText size={20} /><h2>{t.upload.cvTitle}</h2></div>
+                    <div className="segmented" role="tablist">
+                      <button className={inputMode === "file" ? "active" : ""} onClick={() => setInputMode("file")}>{t.upload.fileTab}</button>
+                      <button className={inputMode === "text" ? "active" : ""} onClick={() => setInputMode("text")}>{t.upload.textTab}</button>
+                    </div>
+                  </div>
+
+                  {inputMode === "file" ? (
+                    <>
+                      <div
+                        className={`dropzone ${isDragging ? "dragging" : ""} ${fileName ? "has-file" : ""}`}
+                        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                        onDragLeave={() => setIsDragging(false)}
+                        onDrop={onDrop}
+                      >
+                        {fileName ? (
+                          <div className="file-card">
+                            <span className="file-thumb"><FileCheck2 size={24} /></span>
+                            <div className="file-meta">
+                              <span className="file-name">{fileName}<i className="file-valid">VALID</i></span>
+                              <span className="file-sub">{(file!.size / 1024 / 1024).toFixed(1)} MB • {t.upload.dropzoneSecure}</span>
+                            </div>
+                            <button className="icon-button danger" onClick={(e) => { e.stopPropagation(); setFile(null); }} aria-label="Hapus file"><X size={17} /></button>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="upload-icon"><UploadCloud size={30} /></span>
+                            <p className="dropzone-heading">{t.upload.dropzoneHeading} <button onClick={() => fileInput.current?.click()}>{t.upload.dropzoneLink}</button></p>
+                            <span className="dropzone-meta">{t.upload.dropzoneMeta}</span>
+                            <span className="dropzone-secure"><ShieldCheck size={15} /> {t.upload.dropzoneSecure}</span>
+                          </>
+                        )}
+                        <input ref={fileInput} type="file" accept=".pdf,.docx" onChange={(e: ChangeEvent<HTMLInputElement>) => acceptFile(e.target.files?.[0])} hidden />
+                      </div>
+                      {fileError && <p className="field-error">{fileError}</p>}
+                    </>
                   ) : (
-                    <><div className="upload-icon"><UploadCloud size={26} /></div><strong>{t.upload.dropzone}</strong><span>atau <button onClick={() => fileInput.current?.click()}>{t.upload.or}</button></span><small>PDF atau DOCX · Maks. 5 MB</small></>
+                    <>
+                      <textarea
+                        className="cv-textarea"
+                        value={cvText}
+                        onChange={(e) => { setCvText(e.target.value); setFile(null); resetOutput(); }}
+                        placeholder={t.upload.placeholder}
+                        aria-label="Teks CV"
+                        rows={11}
+                      />
+                      <div className="text-meta">
+                        <button onClick={loadDemo}>{t.upload.demoCv}</button>
+                        <span>{cvText.length.toLocaleString(lang === "id" ? "id-ID" : "en-GB")} {c.characters}</span>
+                      </div>
+                    </>
                   )}
-                  <input ref={fileInput} type="file" accept=".pdf,.docx" onChange={(e: ChangeEvent<HTMLInputElement>) => acceptFile(e.target.files?.[0])} hidden />
-                </div>
-                {fileError && <p className="field-error">{fileError}</p>}
-                <div className="divider"><span>{t.upload.paste}</span></div>
-                <textarea value={cvText} onChange={(e) => { setCvText(e.target.value); setFile(null); resetOutput(); }} placeholder={t.upload.placeholder} aria-label="Teks CV" />
-                <div className="text-meta"><button onClick={() => { setCvText(demoCv); setFile(null); resetOutput(); }}>{t.upload.demoCv}</button><span>{cvText.length.toLocaleString(lang === "id" ? "id-ID" : "en-GB")} {c.characters}</span></div>
-              </section>
+                </section>
 
-              <section className="panel jd-panel">
-                <div className="panel-heading"><span className="number">2</span><div><h3>{t.upload.jdTitle}</h3><p>{t.upload.jdDesc}</p></div><span className="optional">OPSIONAL</span></div>
-                <textarea value={jdText} onChange={(e) => { setJdText(e.target.value); resetOutput(); }} placeholder={t.upload.jdPlaceholder} aria-label="Job description" />
-                <div className="match-benefits">
-                  <strong><Target size={17} /> {t.upload.jdBenefits}</strong>
-                  <span><Check size={15} /> Skor kecocokan dengan posisi</span>
-                  <span><Check size={15} /> Keyword penting yang belum ada</span>
-                  <span><Check size={15} /> Prioritas perbaikan yang relevan</span>
-                </div>
-              </section>
+                <section className="panel privacy-strip">
+                  <ShieldCheck size={22} />
+                  <div>
+                    <strong>{c.privacyTitle}</strong>
+                    <p>{c.privacyDesc}</p>
+                  </div>
+                  <span className="mono-chip">{t.upload.privacyBadge}</span>
+                </section>
+              </div>
+
+              {/* Kolom kanan: JD + preview rubrik */}
+              <div className="ingest-right">
+                <section className="panel">
+                  <div className="panel-heading">
+                    <div className="panel-title"><Target size={19} /><h2>{t.upload.jdTitle}</h2></div>
+                    <span className="mono-chip">{t.upload.jdBadge}</span>
+                  </div>
+                  <p className="panel-desc">{t.upload.jdIntro}</p>
+                  <textarea
+                    className="jd-textarea"
+                    value={jdText}
+                    onChange={(e) => { setJdText(e.target.value); resetOutput(); }}
+                    placeholder={t.upload.jdPlaceholder}
+                    aria-label="Job description"
+                    rows={7}
+                  />
+                  <div className="jd-note"><Check size={16} /> {t.upload.jdNote}</div>
+                </section>
+
+                <section className="panel">
+                  <div className="panel-heading">
+                    <div className="panel-title"><ListChecks size={19} /><h2>{t.upload.rubricHeading}</h2></div>
+                    <span className="mono-chip plain">{t.upload.rubricBadge}</span>
+                  </div>
+                  <p className="panel-desc">{t.upload.rubricIntro}</p>
+                  <div className="rubric-preview">
+                    {CATEGORY_KEYS.map((key) => (
+                      <div className="rubric-row" key={key}>
+                        <span className="rubric-weight">{CATEGORY_WEIGHTS[key]}%</span>
+                        <div>
+                          <strong>{t.results.categories[key]}</strong>
+                          <span>{t.upload.rubricDesc[key]}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
             </div>
 
-            {apiError && <p className="field-error">{apiError}</p>}
+            {apiError && <p className="field-error big-error">{apiError}</p>}
 
-            <div className="analysis-bar">
-              <div><ShieldCheck size={18} /><span><strong>{c.privacyTitle}</strong> {c.privacyDesc}</span></div>
-              <button className="primary-button" disabled={!canAnalyze || loading} onClick={analyze}>
-                {loading ? <><span className="spinner" /> {phase === "extracting" ? t.upload.extracting : t.upload.analyzing}</> : <><Sparkles size={18} /> {t.upload.analyze} <ArrowRight size={18} /></>}
-              </button>
-            </div>
-          </section>
+            {/* Action bar */}
+            <section className="action-bar">
+              <div className="action-note">
+                <i />
+                <div>
+                  <strong>{c.privacyTitle}</strong>
+                  <p>{t.upload.ctaNote}</p>
+                </div>
+              </div>
+              <div className="action-buttons">
+                <button className="ghost-button" onClick={loadDemo}><PlayCircle size={17} /> {t.upload.demoLoad}</button>
+                <button className="primary-button" disabled={!canAnalyze || loading} onClick={analyze}>
+                  {loading
+                    ? <><span className="spinner" /> {phase === "extracting" ? t.upload.extracting : t.upload.analyzing}</>
+                    : <>{t.upload.analyze} <ArrowRight size={18} /> <span className="cta-time">{t.upload.ctaTime}</span></>}
+                </button>
+              </div>
+            </section>
+          </>
         )}
       </main>
+      <footer className="app-footer"><span>{t.upload.footer}</span><span className="mono-chip plain">RESET CYCLE: 00:00 UTC</span></footer>
     </div>
   );
 }
@@ -335,15 +458,15 @@ function HistoryView({
             <button className="history-row" key={item.id} onClick={() => onOpen(item)}>
               <span className="doc-cell"><i><FileText size={18} /></i><strong>{item.name}</strong></span>
               <span>{item.role}</span>
-              <span><Clock3 size={14} /> {item.date}</span>
+              <span>{item.date}</span>
               <span className={`table-score ${item.score < 75 ? "warn" : ""}`}>{item.score}</span>
-              <ChevronRight size={18} />
+              <span className="row-arrow">→</span>
             </button>
           ))
         )}
       </div>
       {history.length > 0 && (
-        <button className="secondary-button history-clear" onClick={onClear}><Trash2 size={14} /> {c.clear}</button>
+        <button className="ghost-button history-clear" onClick={onClear}><Trash2 size={14} /> {c.clear}</button>
       )}
     </section>
   );
