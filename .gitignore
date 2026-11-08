@@ -29,3 +29,7 @@ dist/
 build/
 coverage/
 *.tsbuildinfo
+
+# Database lokal (SQLite dev) - jangan ikut ter-commit
+*.db
+*.sqlite*

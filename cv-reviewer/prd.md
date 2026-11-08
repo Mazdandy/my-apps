@@ -3,9 +3,9 @@
 | Field | Value |
 |---|---|
 | Nama Produk | LOTC - CV Reviewer |
-| Versi Dokumen | 1.1 |
-| Tanggal | 2026-08-18 |
-| Status | Final Draft |
+| Versi Dokumen | 1.2 |
+| Tanggal | 2026-09-18 |
+| Status | Implementasi — AI aktif, auth belum |
 | Tipe Proyek | Web app portfolio-driven, target biaya operasional Rp0 (free tier) |
 
 ---
@@ -79,10 +79,14 @@ Skor total = weighted sum dari 7 kategori: Parseability, Struktur, Keyword Relev
 | Layer | Pilihan |
 |---|---|
 | Framework | **Next.js (App Router) + TypeScript** |
-| Styling | **Tailwind CSS + shadcn/ui** |
-| Auth | **Firebase Authentication** (Wajib Login) |
-| Database | **Cloud Firestore** (Menyimpan `cvText` & hasil review) |
-| AI Model | **Google Gemini (flash tier)** via API key |
+| Styling | **CSS murni** (hand-authored, `app/globals.css`) — Tailwind + shadcn/ui dibatalkan saat implementasi |
+| Auth | **Belum ada** — Firebase Authentication (Wajib Login) ditunda ke v1.3; login masih mock |
+| Database | **Belum ada** — Cloud Firestore ditunda ke v1.3; riwayat masih in-memory |
+| AI Model | **Google Gemini** (`gemini-3.5-flash` default, via `@google/genai`), structured JSON output |
+| Ekstraksi file | **`mammoth`** (DOCX) + **`pdf-parse` v2** (PDF), dijalankan server-side |
+
+> Catatan: Tailwind dan Firestore di atas adalah rencana awal. Yang benar-benar
+> berjalan saat ini mengikuti tabel versi di §7.
 
 ---
 
@@ -94,3 +98,58 @@ Skor total = weighted sum dari 7 kategori: Parseability, Struktur, Keyword Relev
 4. **Processing**: Ekstraksi teks & analisis AI.
 5. **Result**: Tampilan skor, temuan, dan saran perbaikan.
 6. **History**: Melihat review sebelumnya dan membandingkan skor.
+
+---
+
+## 7. Riwayat Versi
+
+### v1.2 — 2026-09-18 — Integrasi AI (selesai)
+
+**Cakupan:** review disambungkan ke AI sungguhan + ekstraksi file nyata. Auth dan
+penyimpanan sengaja ditunda.
+
+Yang berubah:
+
+- `analyze()` tidak lagi `setTimeout` + skor `82` hardcoded. Frontend memanggil
+  `POST /api/extract` (kalau ada file) lalu `POST /api/review`, dan merender hasilnya.
+- **Mesin penilaian ATS (FR-2)** diimplementasikan sebagai rubrik berbobot: `parseability` 20,
+  `structure` 15, `keywords` 20, `impact` 20, `clarity` 10, `consistency` 8, `hygiene` 7.
+  Bobot tinggal di `lib/review.ts` dan diberitahukan ke model hanya sebagai konteks kalibrasi.
+  **Skor akhir dihitung server** (`computeAtsScore()`) dari 7 skor kategori yang dikembalikan
+  model — awalnya model diminta menghitung sendiri, tapi terbukti tidak konsisten (melaporkan
+  39 padahal weighted sum dari kategorinya sendiri 51). Karena itu `score` juga dihapus dari
+  skema output AI, sehingga FR-2 terpenuhi secara konstruksi, bukan bergantung kepatuhan model.
+- **Persona AI (FR-3)** di-instruksikan lewat `system_instruction`: recruiter senior yang
+  kritis, wajib mengutip literal dari CV di tiap temuan, wajib memberi rewrite
+  `quote → after`, dilarang mengarang metrik.
+- **Ingest (FR-1)**: `.pdf` dan `.docx` diekstrak server-side (`pdf-parse`, `mammoth`);
+  paste teks manual tetap didukung. Batas 5 MB divalidasi di klien dan server.
+- **Bahasa (FR-5)**: `locale` dikirim dari klien mengikuti bahasa browser; seluruh string
+  hasil AI dipaksa ke bahasa itu, sementara `findings.quote` tetap bahasa asli CV. Aturan
+  bahasa diletakkan di awal *dan* akhir `system_instruction` — tanpa pengulangan itu, model
+  mengikuti bahasa CV (CV Indonesia + `locale: "en"` keluar dalam Bahasa Indonesia).
+- Output AI divalidasi skema (zod) sebelum dikirim ke UI. Struct output Gemini memakai
+  `response_format.schema` yang diturunkan dari skema zod yang sama.
+- **Deploy**: `pdf-parse`, `pdfjs-dist`, dan `mammoth` memuat berkas lewat path saat runtime
+  (entry CJS dan PDF worker), yang tidak terlihat oleh file tracing Next. Tanpa
+  `outputFileTracingIncludes`, output standalone hanya berisi `esm/` dan setiap upload PDF
+  gagal di produksi. Glob-nya relatif ke direktori app (`../node_modules/...`).
+
+**Keputusan provider:** Google Gemini dengan API key sendiri. Tidak memakai token/plan
+Command Code karena tidak ada API key publik untuk aplikasi eksternal — model catalog-nya
+hanya bisa diakses lewat harness CLI, yang berarti token akun pribadi harus ditaruh di VPS
+dan kuota plan pribadi terkuras tiap review publik.
+
+**Sengaja ditunda (bukan selesai):**
+
+| Item | Status | Rencana |
+|---|---|---|
+| FR-4 Autentikasi (wajib login) | Login masih mock | v1.3 — Firebase Auth |
+| FR-4 Kuota harian | Kartu kuota cuma tampilan statis | v1.3 — butuh identitas user dulu |
+| Riwayat & perbandingan versi | In-memory, hilang saat reload | v1.3 — Firestore (`cvText` ikut disimpan) |
+| Streaming hasil | JSON sekali jalan | Belum dijadwalkan |
+| Rate limiting endpoint publik | Belum ada | Perlu sebelum rilis publik |
+
+### v1.1 — 2026-08-18
+
+Draft final PRD; aplikasi masih mockup UI (skor dan temuan hardcoded).

@@ -1,12 +1,25 @@
 # LOTC — CV Reviewer
 
-Review CV yang jujur, spesifik, dan berbasis bukti. Web app (Next.js 16 + React 19) untuk
+Review CV yang jujur, spesifik, dan berbasis bukti. Web app (Vite + React 19) untuk
 menilai CV dengan skor ATS, temuan berbasis bukti, dan saran perbaikan.
 
-> Status: **mockup/UI prototype** — login, skor, dan hasil review masih simulasi di frontend
-> (belum ada Firebase Auth, Firestore, atau Gemini). Lihat `prd.md` untuk target arsitektur.
+> Status: **review tersambung ke AI** — AtmoRouter (BYOK, bayar per token) dengan kontrak
+> JSON di prompt + validasi zod, plus ekstraksi PDF/DOCX di browser. Yang masih mock:
+> **login** dan **riwayat**. Lihat `prd.md` untuk rincian cakupan.
 
 ---
+
+## Arsitektur
+
+Aplikasi ini **100% client-side** (static site) dengan satu pengecualian:
+
+- Semua UI, parsing PDF/DOCX (`pdfjs-dist`, `mammoth`), dan riwayat berjalan di browser.
+- Panggilan AI tidak bisa langsung dari browser karena AtmoRouter tidak mengirim header
+  CORS, jadi ada **proxy PHP same-origin** `public/api/review.php` yang diteruskan dari
+  hosting yang sama. Proxy hanya meneruskan request BYOK user ke
+  `https://atmorouter.dev/v1/chat/completions` — tidak menyimpan API key maupun isi CV.
+
+API key AtmoRouter (awalan `ar-`) disimpan user di localStorage browser masing-masing.
 
 ## Local Dev
 
@@ -15,71 +28,29 @@ App ini bagian dari monorepo `my-apps` — satu lockfile di root repo, jadi inst
 ```bash
 # dari root my-apps
 npm install --include=dev
-npm run dev --workspace=lotc-cv-reviewer    # http://localhost:3000
+npm run dev --workspace=lotc-cv-reviewer    # http://localhost:5173
 ```
 
-## Build (production)
+> Catatan: di dev lokal, `api/review.php` tidak dijalankan Vite (butuh PHP). Untuk mencoba
+> alur review penuh, jalankan `php -S` untuk folder `public/api/` atau deploy ke hosting.
+> `VITE_ATMOROUTER_MODEL` (opsional) mengubah model default `cbcn/glm-5.3-flash`.
+
+## Build & Deploy (cPanel)
 
 ```bash
-env -u NODE_ENV npm run build --workspace=lotc-cv-reviewer
+# dari root monorepo
+npm run build --workspace=lotc-cv-reviewer
 ```
 
-Build menghasilkan output **standalone** (`.next/standalone/cv-reviewer/server.js`) untuk
-deploy VPS tanpa Docker, persis pola proyek Wedding & YT Downloader.
+Hasil build ada di `cv-reviewer/dist/` — **termasuk `api/review.php`** (disalin dari
+`public/`). Upload seluruh isi `dist/` ke folder public hosting cPanel (mis.
+`public_html/cv/`), pastikan:
 
-> **Penting:** `next.config.ts` menetapkan `outputFileTracingRoot` ke root monorepo (folder
-> di atas app ini). Next.js memakai nilai itu sebagai filesystem root untuk resolusi module,
-> dan npm workspaces meng-hoist `node_modules` ke root tersebut — kalau diarahkan ke folder
-> app, `next` tidak ketemu dan build gagal. Efek sampingnya output standalone menyalin
-> struktur workspace, jadi `server.js` berada di `.next/standalone/cv-reviewer/`, bukan
-> langsung di `.next/standalone/`. `deploy/install-services.sh` mencari path itu otomatis.
+1. Domain/subdomain menunjuk ke folder itu.
+2. PHP aktif (proxy butuh ekstensi `curl`, standar di cPanel).
+3. `BASE_PATH` saat build disesuaikan: untuk subfolder `https://domain.com/cv/` gunakan
+   `BASE_PATH=/cv/ npm run build --workspace=lotc-cv-reviewer`; untuk root domain,
+   `BASE_PATH=/`.
 
----
-
-## Deployment (VPS, systemd + Caddy)
-
-App ini jalan di VPS yang sama dengan Wedding & YT Downloader, dengan subdomain baru:
-
-| Subdomain | App | Port |
-|---|---|---|
-| `loveonthe.cloud` | Wedding | 3001 |
-| `downloader.loveonthe.cloud` | YT Downloader (frontend `/`, api `/api/*`) | 3000 / 8787 |
-| `cv.loveonthe.cloud` | **CV Reviewer** | 3002 |
-
-Requirements: Ubuntu 22.04/24.04 VPS, DNS A record `cv` → IP server.
-
-### 1. Di VPS
-
-cv-reviewer sekarang bagian dari monorepo `my-apps` (satu lockfile di root), jadi yang
-di-clone adalah monorepo-nya, bukan repo app ini sendiri:
-
-```bash
-cd ~ && git clone <monorepo-url> my-apps && cd my-apps
-bash cv-reviewer/deploy/setup-vps.sh cv.loveonthe.cloud
-```
-
-Script melakukan: install Node 22 + Caddy, `npm ci` di root monorepo (sekali untuk semua
-workspace) + build workspace `lotc-cv-reviewer`, **menulis ulang Caddyfile berisi ketiga
-subdomain**, install systemd unit `lotc-cv`, dan restart Caddy.
-
-> Caddyfile ditulis ulang penuh oleh script — ketiga app harus tercantum di dalamnya atau
-> route app lain akan hilang. `deploy/setup-vps.sh` sudah memuat semuanya.
-
-### 2. Cek & update
-
-```bash
-systemctl status lotc-cv        # status service
-journalctl -u lotc-cv -f        # log
-
-# setelah git pull — dari root monorepo
-NODE_ENV=development npm ci --include=dev
-env -u NODE_ENV npm run build --workspace=lotc-cv-reviewer
-bash cv-reviewer/deploy/install-services.sh
-```
-
-> `--include=dev` diperlukan karena npm melewati devDependencies (build tools) saat
-> `NODE_ENV=production`. `env -u NODE_ENV` sebelum build agar `next build` berjalan dalam
-> mode production.
->
-> `deploy/install-services.sh` mencari sendiri lokasi standalone `server.js` — di monorepo
-> ia ada di `.next/standalone/cv-reviewer/server.js`, bukan langsung di `.next/standalone/`.
+Tidak ada server-side state, database, atau storage yang dibutuhkan — 1 GB hosting
+cukup berlebih.
