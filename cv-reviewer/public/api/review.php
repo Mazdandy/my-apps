@@ -4,15 +4,20 @@
  *
  * AtmoRouter tidak mengirim header CORS, jadi browser tidak bisa memanggilnya
  * langsung dari situs statis. File ini ditaruh di hosting yang sama dengan
- * frontend (cPanel), sehingga permintaan dari browser bersifat same-origin
- * dan CORS tidak berlaku. API key AtmoRouter milik user tetap dikirim dari
- * browser (BYOK) dan hanya diteruskan ke atmorouter.dev — tidak disimpan.
+ * frontend (cPanel), sehingga permintaan dari browser bersikap same-origin
+ * dan CORS tidak berlaku.
+ *
+ * API key AtmoRouter milik pemilik situs disimpan di config.php (sisi server,
+ * tidak pernah sampai ke browser). Isi CV hanya diteruskan ke
+ * atmorouter.dev — tidak disimpan di hosting.
  */
 
 declare(strict_types=1);
 
 const UPSTREAM_URL = 'https://atmorouter.dev/v1/chat/completions';
 const MAX_BODY_BYTES = 262144; // 256 KB — cukup untuk CV + job description.
+
+$config = require __DIR__ . '/config.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -22,11 +27,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     exit;
 }
 
-// BYOK: key "ar-..." dikirim browser lewat header Authorization.
-$auth = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-if ($auth === '' || !preg_match('/^Bearer\s+\S+$/i', $auth)) {
-    http_response_code(401);
-    echo json_encode(['error' => ['message' => 'Missing AtmoRouter API key.', 'type' => 'missing_api_key']]);
+$apiKey = trim((string) ($config['atmorouter_api_key'] ?? ''));
+if ($apiKey === '' || !str_starts_with($apiKey, 'ar-')) {
+    http_response_code(503);
+    echo json_encode(['error' => ['message' => 'Layanan AI belum dikonfigurasi. Isi atmorouter_api_key di api/config.php.', 'type' => 'missing_api_key']]);
     exit;
 }
 
@@ -38,11 +42,16 @@ if ($body === '' || strlen($body) > MAX_BODY_BYTES) {
 }
 
 $decoded = json_decode($body, true);
-if (!is_array($decoded) || !isset($decoded['model'], $decoded['messages'])) {
+if (!is_array($decoded) || !isset($decoded['messages']) || !is_array($decoded['messages'])) {
     http_response_code(400);
     echo json_encode(['error' => ['message' => 'Body must be a chat-completions JSON object.', 'type' => 'proxy']]);
     exit;
 }
+
+// Key ada di server: client tidak boleh memilih model sembarangan (harga bisa
+// jauh beda antar model) — pakai model dari config.
+$decoded['model'] = (string) ($config['default_model'] ?? 'cbcn/glm-5.3-flash');
+$body = json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 $ch = curl_init(UPSTREAM_URL);
 curl_setopt_array($ch, [
@@ -51,7 +60,7 @@ curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_HTTPHEADER => [
         'Content-Type: application/json',
-        'Authorization: ' . $auth,
+        'Authorization: Bearer ' . $apiKey,
         'Expect: ',
     ],
     CURLOPT_TIMEOUT => 120,

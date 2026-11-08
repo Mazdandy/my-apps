@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import type { ChangeEvent, DragEvent } from "react";
-import { ApiKeyCard } from "@/components/ApiKeyCard";
 import { ResultView } from "@/components/ResultView";
 import { getCopy } from "@/lib/copy";
 import { ExtractError, extractText } from "@/lib/extract";
@@ -28,7 +27,6 @@ import { ReviewError, reviewCv } from "@/lib/atmorouter";
 import type { Locale } from "@/lib/prompt";
 import type { ReviewResult } from "@/lib/review";
 import { translations } from "@/lib/translations";
-import { useApiKey } from "@/lib/useApiKey";
 
 type View = "review" | "history";
 type Phase = "extracting" | "analyzing";
@@ -85,7 +83,6 @@ function saveHistory(entries: HistoryEntry[]) {
 export function Workspace({ lang }: { lang: Locale }) {
   const t = translations[lang];
   const c = getCopy(lang);
-  const apiKey = useApiKey();
 
   const [view, setView] = useState<View>("review");
   const [mobileNav, setMobileNav] = useState(false);
@@ -135,20 +132,10 @@ export function Workspace({ lang }: { lang: Locale }) {
     acceptFile(event.dataTransfer.files[0]);
   }
 
-  function goToKeyCard() {
-    if (window.matchMedia("(max-width: 900px)").matches) setMobileNav(true);
-    setApiError(c.errors.missing_api_key);
-  }
-
   async function analyze() {
     if (!canAnalyze || loading) return;
     setApiError("");
     setShowResult(false);
-
-    if (!apiKey) {
-      goToKeyCard();
-      return;
-    }
 
     try {
       let text = cvText.trim();
@@ -171,10 +158,9 @@ export function Workspace({ lang }: { lang: Locale }) {
 
       let review: ReviewResult;
       try {
-        review = await reviewCv({ apiKey, cvText: text, jdText: jdText.trim() || undefined, locale: lang });
+        review = await reviewCv({ cvText: text, jdText: jdText.trim() || undefined, locale: lang });
       } catch (error) {
         if (error instanceof ReviewError) {
-          if (error.code === "missing_api_key") goToKeyCard();
           throw new Error(c.errors[error.code] ?? t.upload.errorReview);
         }
         throw new Error(t.upload.errorReview);
@@ -228,7 +214,6 @@ export function Workspace({ lang }: { lang: Locale }) {
             <History size={19} /> {t.nav.history} {history.length > 0 && <span className="nav-count">{history.length}</span>}
           </button>
         </nav>
-        <ApiKeyCard lang={lang} />
       </aside>
       {mobileNav && <button className="nav-backdrop" onClick={() => setMobileNav(false)} aria-label="Tutup menu" />}
 

@@ -43,3 +43,6 @@ next-env.d.ts
 dev.db
 *.sqlite
 *.sqlite3
+
+# API key AtmoRouter di hosting — JANGAN pernah commit (ada di server saja)
+/public/api/config.php

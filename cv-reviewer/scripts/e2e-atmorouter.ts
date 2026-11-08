@@ -50,7 +50,6 @@ const res = await fetch("https://atmorouter.dev/v1/chat/completions", {
     temperature: 0.3,
   }),
 });
-
 console.log("HTTP", res.status);
 const payload = (await res.json()) as {
   choices?: Array<{ message?: { content?: string } }>;

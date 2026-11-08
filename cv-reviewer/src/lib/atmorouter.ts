@@ -4,17 +4,14 @@ import { buildSystemInstruction, buildUserInput, type Locale } from "@/lib/promp
 /**
  * Klien AtmoRouter (https://atmorouter.dev) lewat proxy PHP same-origin
  * (`api/review.php`). AtmoRouter tidak mendukung CORS, jadi browser tidak
- * bisa memanggilnya langsung; proxy di hosting yang sama meneruskan request
- * BYOK user tanpa pernah menyimpan key-nya.
+ * bisa memanggilnya langsung; proxy di hosting yang sama memegang API key
+ * milik pemilik situs (api/config.php, tidak pernah sampai ke browser).
  *
  * Catatan: endpoint ini OpenAI-compatible, tapi `response_format` json_schema
  * TIDAK dihormati router, jadi kontrak JSON ditanam di system instruction dan
  * output dibersihkan (markdown fence, prefix reasoning) sebelum divalidasi zod.
  */
 
-// Env `VITE_` hanya fallback opsional untuk pemakaian lokal. Jangan diisi di
-// build publik: nilainya ikut ter-bundle dan bisa dibaca siapa pun.
-const DEFAULT_MODEL = "cbcn/glm-5.3-flash";
 const MAX_OUTPUT_TOKENS = 8192;
 
 /** Relatif terhadap BASE_URL Vite, jadi ikut benar baik di subfolder maupun root domain. */
@@ -72,27 +69,18 @@ interface ChatCompletionResponse {
 }
 
 export async function reviewCv(input: {
-  apiKey: string;
   cvText: string;
   jdText?: string;
   locale: Locale;
 }): Promise<ReviewResult> {
-  if (!input.apiKey) {
-    throw new ReviewError("missing_api_key", "AtmoRouter API key is not set.");
-  }
-
-  const model = import.meta.env.VITE_ATMOROUTER_MODEL || DEFAULT_MODEL;
-
   let response: Response;
   try {
     response = await fetch(PROXY_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${input.apiKey}`,
       },
       body: JSON.stringify({
-        model,
         messages: [
           {
             role: "system",
